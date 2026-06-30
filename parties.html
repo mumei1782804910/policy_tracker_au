@@ -12,11 +12,14 @@
   }
   *{box-sizing:border-box}
   body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    background:var(--bg);color:var(--ink);line-height:1.5}
+    background:var(--bg);color:var(--ink);line-height:1.55}
   header{padding:28px 20px 18px;max-width:1080px;margin:0 auto}
   h1{margin:0 0 4px;font-size:24px}
-  .sub{color:var(--muted);font-size:14px;margin:0}
+  .sub{color:var(--muted);font-size:14px;margin:0;max-width:760px}
   .wrap{max-width:1080px;margin:0 auto;padding:0 20px 60px}
+  .topbar{display:flex;justify-content:flex-end;max-width:1080px;margin:0 auto;padding:8px 20px 0}
+  .langbox{display:flex;align-items:center;gap:8px}
+  .langbox label{font-size:13px;color:var(--muted);font-weight:600}
   .tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:2px solid var(--line);margin:18px 0 0}
   .tab{padding:11px 18px;cursor:pointer;border:none;background:none;font-size:15px;
     font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px}
@@ -25,14 +28,14 @@
   .controls label{font-size:13px;color:var(--muted);font-weight:600}
   select{padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);
     font-size:14px;color:var(--ink)}
-  .count{font-size:13px;color:var(--muted);margin-left:auto}
+  .count{font-size:13px;color:var(--muted);margin-inline-start:auto}
   .panel{display:none}
   .panel.active{display:block}
   table{width:100%;border-collapse:collapse;background:var(--card);border-radius:12px;
     overflow:hidden;box-shadow:0 1px 3px rgba(20,30,50,.06)}
-  thead th{background:#eef2f7;text-align:left;padding:12px 14px;font-size:12px;
+  thead th{background:#eef2f7;text-align:start;padding:12px 14px;font-size:12px;
     text-transform:uppercase;letter-spacing:.4px;color:var(--muted);border-bottom:1px solid var(--line)}
-  tbody td{padding:13px 14px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:top}
+  tbody td{padding:13px 14px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:top;text-align:start}
   tbody tr:last-child td{border-bottom:none}
   tbody tr:hover{background:#fafcff}
   .date{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--muted);font-weight:600}
@@ -48,100 +51,183 @@
 </style>
 </head>
 <body>
+<div class="topbar">
+  <div class="langbox">
+    <label id="langLabel" for="langSel">Language</label>
+    <select id="langSel">
+      <option value="en">English</option>
+      <option value="zhs">简体中文</option>
+      <option value="zht">繁體中文</option>
+      <option value="ar">العربية</option>
+      <option value="vi">Tiếng Việt</option>
+      <option value="pa">ਪੰਜਾਬੀ</option>
+    </select>
+  </div>
+</div>
 <header>
-  <h1>Australian Political Parties — Policy Tracker</h1>
-  <p class="sub">Policies proposed or supported by each party, newest first. Filter by policy type; sentiment shows how the <b>public</b> broadly received the policy.</p>
+  <h1 id="pageTitle"></h1>
+  <p class="sub" id="pageSub"></p>
 </header>
 
 <div class="wrap">
   <div class="tabs" id="tabs">
-    <button class="tab active" data-tab="labor">Labor</button>
-    <button class="tab" data-tab="liberal">Liberal</button>
-    <button class="tab" data-tab="greens">Greens</button>
-    <button class="tab" data-tab="onenation">One Nation</button>
+    <button class="tab active" data-tab="labor"></button>
+    <button class="tab" data-tab="liberal"></button>
+    <button class="tab" data-tab="greens"></button>
+    <button class="tab" data-tab="onenation"></button>
   </div>
 
   <div class="controls">
-    <label for="typeFilter">Policy type:</label>
-    <select id="typeFilter"><option value="all">All types</option></select>
+    <label id="filterLabel" for="typeFilter"></label>
+    <select id="typeFilter"></select>
     <span class="count" id="count"></span>
   </div>
 
   <div class="panel active" id="panel-labor">
-    <table><thead><tr><th>Date</th><th>Policy type</th><th>Policy</th><th>Public sentiment</th></tr></thead><tbody id="body-labor"></tbody></table>
+    <table><thead><tr><th class="h-date"></th><th class="h-type"></th><th class="h-pol"></th><th class="h-sent"></th></tr></thead><tbody id="body-labor"></tbody></table>
   </div>
   <div class="panel" id="panel-liberal">
-    <table><thead><tr><th>Date</th><th>Policy type</th><th>Policy</th><th>Public sentiment</th></tr></thead><tbody id="body-liberal"></tbody></table>
+    <table><thead><tr><th class="h-date"></th><th class="h-type"></th><th class="h-pol"></th><th class="h-sent"></th></tr></thead><tbody id="body-liberal"></tbody></table>
   </div>
   <div class="panel" id="panel-greens">
-    <table><thead><tr><th>Date</th><th>Policy type</th><th>Policy</th><th>Public sentiment</th></tr></thead><tbody id="body-greens"></tbody></table>
+    <table><thead><tr><th class="h-date"></th><th class="h-type"></th><th class="h-pol"></th><th class="h-sent"></th></tr></thead><tbody id="body-greens"></tbody></table>
   </div>
   <div class="panel" id="panel-onenation">
-    <table><thead><tr><th>Date</th><th>Policy type</th><th>Policy</th><th>Public sentiment</th></tr></thead><tbody id="body-onenation"></tbody></table>
+    <table><thead><tr><th class="h-date"></th><th class="h-type"></th><th class="h-pol"></th><th class="h-sent"></th></tr></thead><tbody id="body-onenation"></tbody></table>
   </div>
 
-  <p class="legend"><b>Public sentiment legend:</b> <span class="sent pos">Positive</span> the policy was broadly popular / well received &nbsp;·&nbsp; <span class="sent neg">Negative</span> the policy was broadly unpopular / poorly received. Reception is a general assessment from polling and reporting and varies across the population.</p>
+  <p class="legend" id="legend"></p>
 </div>
 
-<footer>
-  Compiled June 2026 from public reporting and reference sources including Wikipedia, Britannica, The Conversation, SBS News, AustralianPolitics.com and the parties' own websites. Dates are approximate and "sentiment" reflects broad public reception (from polling and reporting), not an endorsement.
-</footer>
+<footer id="footer"></footer>
 
 <script>
+const UI = {
+  en:{title:"Australian Political Parties — Policy Tracker", sub:"Policies proposed or supported by each party, newest first. Filter by policy type; sentiment shows how the public broadly received the policy.", langLabel:"Language", filterLabel:"Policy type", allTypes:"All types", unit:"policies", colDate:"Date", colType:"Policy type", colPol:"Policy", colSent:"Public sentiment", sentPos:"Positive", sentNeg:"Negative", legTitle:"Public sentiment legend:", legPos:"broadly popular / well received by the public", legNeg:"broadly unpopular / poorly received", legNote:"Reception is a general assessment from polling and reporting and varies across the population.", footer:"Compiled June 2026 from public reporting and reference sources. Dates are approximate; “sentiment” reflects broad public reception, not an endorsement.", ongoing:"Ongoing"},
+  zhs:{title:"澳大利亚政党 — 政策追踪", sub:"按时间倒序列出各政党提出或支持的政策。可按政策类型筛选；反响一栏显示公众对该政策的总体反响。", langLabel:"语言", filterLabel:"政策类型", allTypes:"所有类型", unit:"项政策", colDate:"日期", colType:"政策类型", colPol:"政策", colSent:"公众反响", sentPos:"正面", sentNeg:"负面", legTitle:"公众反响说明：", legPos:"公众普遍欢迎／反响良好", legNeg:"公众普遍不满／反响不佳", legNote:"反响为根据民调与报道作出的总体评估，不同人群之间存在差异。", footer:"于2026年6月根据公开报道及参考资料整理。日期为大致时间；“反响”反映公众的总体反应，并非认可。", ongoing:"持续"},
+  zht:{title:"澳洲政黨 — 政策追蹤", sub:"按時間倒序列出各政黨提出或支持的政策。可按政策類型篩選；反響一欄顯示公眾對該政策的整體反響。", langLabel:"語言", filterLabel:"政策類型", allTypes:"所有類型", unit:"項政策", colDate:"日期", colType:"政策類型", colPol:"政策", colSent:"公眾反響", sentPos:"正面", sentNeg:"負面", legTitle:"公眾反響說明：", legPos:"公眾普遍歡迎／反響良好", legNeg:"公眾普遍不滿／反響不佳", legNote:"反響為根據民調與報導作出的整體評估，不同人群之間存在差異。", footer:"於2026年6月根據公開報導及參考資料整理。日期為大致時間；「反響」反映公眾的整體反應，並非認可。", ongoing:"持續"},
+  ar:{title:"الأحزاب السياسية الأسترالية — متتبّع السياسات", sub:"السياسات التي اقترحها أو دعمها كل حزب، الأحدث أولاً. صفِّ حسب نوع السياسة؛ ويُظهر عمود المشاعر كيف تلقّى الجمهور السياسة بشكل عام.", langLabel:"اللغة", filterLabel:"نوع السياسة", allTypes:"جميع الأنواع", unit:"سياسة", colDate:"التاريخ", colType:"نوع السياسة", colPol:"السياسة", colSent:"مشاعر الجمهور", sentPos:"إيجابي", sentNeg:"سلبي", legTitle:"دليل مشاعر الجمهور:", legPos:"حظيت بقبول واسع / استقبال جيد من الجمهور", legNeg:"لم تحظَ بقبول واسع / استقبال سيئ", legNote:"الاستقبال تقدير عام مبني على استطلاعات الرأي والتقارير ويختلف بين فئات السكان.", footer:"جُمعت في يونيو 2026 من تقارير عامة ومصادر مرجعية. التواريخ تقريبية؛ وتعكس «المشاعر» الاستقبال العام للجمهور وليست تأييداً.", ongoing:"مستمر"},
+  vi:{title:"Các đảng phái chính trị Úc — Theo dõi chính sách", sub:"Các chính sách do mỗi đảng đề xuất hoặc ủng hộ, mới nhất trước. Lọc theo loại chính sách; cột cảm nhận cho thấy công chúng đón nhận chính sách như thế nào.", langLabel:"Ngôn ngữ", filterLabel:"Loại chính sách", allTypes:"Tất cả các loại", unit:"chính sách", colDate:"Ngày", colType:"Loại chính sách", colPol:"Chính sách", colSent:"Cảm nhận công chúng", sentPos:"Tích cực", sentNeg:"Tiêu cực", legTitle:"Chú thích cảm nhận công chúng:", legPos:"được công chúng ủng hộ rộng rãi / đón nhận tốt", legNeg:"không được ủng hộ / đón nhận kém", legNote:"Mức đón nhận là đánh giá chung từ thăm dò và báo chí, và khác nhau giữa các nhóm dân cư.", footer:"Tổng hợp tháng 6/2026 từ các nguồn tin công khai và tài liệu tham khảo. Ngày tháng là gần đúng; “cảm nhận” phản ánh sự đón nhận chung của công chúng, không phải sự tán thành.", ongoing:"Đang tiếp diễn"},
+  pa:{title:"ਆਸਟ੍ਰੇਲੀਆਈ ਸਿਆਸੀ ਪਾਰਟੀਆਂ — ਨੀਤੀ ਟ੍ਰੈਕਰ", sub:"ਹਰ ਪਾਰਟੀ ਵੱਲੋਂ ਪ੍ਰਸਤਾਵਿਤ ਜਾਂ ਸਮਰਥਿਤ ਨੀਤੀਆਂ, ਨਵੀਨਤਮ ਪਹਿਲਾਂ। ਨੀਤੀ ਕਿਸਮ ਅਨੁਸਾਰ ਫਿਲਟਰ ਕਰੋ; ਭਾਵਨਾ ਕਾਲਮ ਦਿਖਾਉਂਦਾ ਹੈ ਕਿ ਲੋਕਾਂ ਨੇ ਨੀਤੀ ਨੂੰ ਆਮ ਤੌਰ 'ਤੇ ਕਿਵੇਂ ਅਪਣਾਇਆ।", langLabel:"ਭਾਸ਼ਾ", filterLabel:"ਨੀਤੀ ਕਿਸਮ", allTypes:"ਸਾਰੀਆਂ ਕਿਸਮਾਂ", unit:"ਨੀਤੀਆਂ", colDate:"ਤਾਰੀਖ", colType:"ਨੀਤੀ ਕਿਸਮ", colPol:"ਨੀਤੀ", colSent:"ਲੋਕ ਭਾਵਨਾ", sentPos:"ਸਕਾਰਾਤਮਕ", sentNeg:"ਨਕਾਰਾਤਮਕ", legTitle:"ਲੋਕ ਭਾਵਨਾ ਵੇਰਵਾ:", legPos:"ਲੋਕਾਂ ਵੱਲੋਂ ਵਿਆਪਕ ਤੌਰ 'ਤੇ ਪਸੰਦ / ਚੰਗਾ ਹੁੰਗਾਰਾ", legNeg:"ਵਿਆਪਕ ਤੌਰ 'ਤੇ ਨਾਪਸੰਦ / ਮਾੜਾ ਹੁੰਗਾਰਾ", legNote:"ਹੁੰਗਾਰਾ ਸਰਵੇਖਣਾਂ ਅਤੇ ਰਿਪੋਰਟਾਂ 'ਤੇ ਆਧਾਰਿਤ ਆਮ ਮੁਲਾਂਕਣ ਹੈ ਅਤੇ ਲੋਕਾਂ ਵਿੱਚ ਵੱਖਰਾ ਹੁੰਦਾ ਹੈ।", footer:"ਜੂਨ 2026 ਵਿੱਚ ਜਨਤਕ ਰਿਪੋਰਟਾਂ ਅਤੇ ਹਵਾਲਾ ਸਰੋਤਾਂ ਤੋਂ ਤਿਆਰ ਕੀਤਾ। ਤਾਰੀਖਾਂ ਲਗਭਗ ਹਨ; 'ਭਾਵਨਾ' ਲੋਕਾਂ ਦੇ ਆਮ ਹੁੰਗਾਰੇ ਨੂੰ ਦਰਸਾਉਂਦੀ ਹੈ, ਸਮਰਥਨ ਨਹੀਂ।", ongoing:"ਜਾਰੀ"}
+};
+
+const TABS = {
+  labor:{en:"Labor", zhs:"工党", zht:"工黨", ar:"حزب العمال", vi:"Lao động", pa:"ਲੇਬਰ"},
+  liberal:{en:"Liberal", zhs:"自由党", zht:"自由黨", ar:"الحزب الليبرالي", vi:"Tự do", pa:"ਲਿਬਰਲ"},
+  greens:{en:"Greens", zhs:"绿党", zht:"綠黨", ar:"حزب الخضر", vi:"Đảng Xanh", pa:"ਗ੍ਰੀਨਜ਼"},
+  onenation:{en:"One Nation", zhs:"一国党", zht:"一國黨", ar:"حزب الأمة الواحدة", vi:"One Nation", pa:"ਵਨ ਨੇਸ਼ਨ"}
+};
+
+const TYPES = {
+  "Immigration":{en:"Immigration",zhs:"移民",zht:"移民",ar:"الهجرة",vi:"Nhập cư",pa:"ਇਮੀਗ੍ਰੇਸ਼ਨ"},
+  "Tax":{en:"Tax",zhs:"税收",zht:"稅收",ar:"الضرائب",vi:"Thuế",pa:"ਟੈਕਸ"},
+  "Climate Change":{en:"Climate Change",zhs:"气候变化",zht:"氣候變化",ar:"تغير المناخ",vi:"Biến đổi khí hậu",pa:"ਜਲਵਾਯੂ ਤਬਦੀਲੀ"},
+  "Government Spending":{en:"Government Spending",zhs:"政府开支",zht:"政府開支",ar:"الإنفاق الحكومي",vi:"Chi tiêu chính phủ",pa:"ਸਰਕਾਰੀ ਖਰਚ"},
+  "Gun Control":{en:"Gun Control",zhs:"枪支管制",zht:"槍械管制",ar:"ضبط الأسلحة",vi:"Kiểm soát súng",pa:"ਬੰਦੂਕ ਕੰਟਰੋਲ"},
+  "Health (COVID)":{en:"Health (COVID)",zhs:"健康（新冠）",zht:"健康（新冠）",ar:"الصحة (كوفيد)",vi:"Y tế (COVID)",pa:"ਸਿਹਤ (ਕੋਵਿਡ)"},
+  "Islam / Civil Liberties":{en:"Islam / Civil Liberties",zhs:"伊斯兰／公民自由",zht:"伊斯蘭／公民自由",ar:"الإسلام / الحريات المدنية",vi:"Hồi giáo / Quyền tự do dân sự",pa:"ਇਸਲਾਮ / ਨਾਗਰਿਕ ਆਜ਼ਾਦੀ"},
+  "Indigenous Affairs":{en:"Indigenous Affairs",zhs:"原住民事务",zht:"原住民事務",ar:"شؤون السكان الأصليين",vi:"Vấn đề thổ dân",pa:"ਮੂਲ ਨਿਵਾਸੀ ਮਾਮਲੇ"},
+  "Trade":{en:"Trade",zhs:"贸易",zht:"貿易",ar:"التجارة",vi:"Thương mại",pa:"ਵਪਾਰ"},
+  "Education":{en:"Education",zhs:"教育",zht:"教育",ar:"التعليم",vi:"Giáo dục",pa:"ਸਿੱਖਿਆ"},
+  "Health":{en:"Health",zhs:"医疗",zht:"醫療",ar:"الصحة",vi:"Y tế",pa:"ਸਿਹਤ"},
+  "Cost of Living":{en:"Cost of Living",zhs:"生活成本",zht:"生活成本",ar:"تكلفة المعيشة",vi:"Chi phí sinh hoạt",pa:"ਜੀਵਨ ਲਾਗਤ"},
+  "Housing":{en:"Housing",zhs:"住房",zht:"住房",ar:"الإسكان",vi:"Nhà ở",pa:"ਰਿਹਾਇਸ਼"},
+  "Defence":{en:"Defence",zhs:"国防",zht:"國防",ar:"الدفاع",vi:"Quốc phòng",pa:"ਰੱਖਿਆ"},
+  "Industrial Relations":{en:"Industrial Relations",zhs:"劳资关系",zht:"勞資關係",ar:"العلاقات العمالية",vi:"Quan hệ lao động",pa:"ਉਦਯੋਗਿਕ ਸਬੰਧ"},
+  "Integrity":{en:"Integrity",zhs:"廉政",zht:"廉政",ar:"النزاهة",vi:"Liêm chính",pa:"ਇਮਾਨਦਾਰੀ"},
+  "Environment":{en:"Environment",zhs:"环境",zht:"環境",ar:"البيئة",vi:"Môi trường",pa:"ਵਾਤਾਵਰਣ"},
+  "Foreign Policy":{en:"Foreign Policy",zhs:"外交政策",zht:"外交政策",ar:"السياسة الخارجية",vi:"Chính sách đối ngoại",pa:"ਵਿਦੇਸ਼ ਨੀਤੀ"},
+  "Disability":{en:"Disability",zhs:"残障",zht:"殘障",ar:"الإعاقة",vi:"Khuyết tật",pa:"ਅਪੰਗਤਾ"},
+  "Economy":{en:"Economy",zhs:"经济",zht:"經濟",ar:"الاقتصاد",vi:"Kinh tế",pa:"ਆਰਥਿਕਤਾ"},
+  "Welfare":{en:"Welfare",zhs:"福利",zht:"福利",ar:"الرعاية الاجتماعية",vi:"Phúc lợi",pa:"ਭਲਾਈ"},
+  "Energy":{en:"Energy",zhs:"能源",zht:"能源",ar:"الطاقة",vi:"Năng lượng",pa:"ਊਰਜਾ"},
+  "Water":{en:"Water",zhs:"水利",zht:"水利",ar:"المياه",vi:"Nước",pa:"ਪਾਣੀ"}
+};
+
 const DATA = {
   labor: [
-    {date:"2025", sort:"2025-06-01", type:"Education", pos:"Cut 20% of student (HECS) debt for ~3 million Australians and lift the repayment threshold.", sent:"pos"},
-    {date:"2025", sort:"2025-05-20", type:"Health", pos:"Expand Medicare bulk-billing, cap PBS scripts at $25 and roll out more urgent-care clinics.", sent:"pos"},
-    {date:"2022–25", sort:"2024-05-01", type:"Cost of Living", pos:"$20bn+ in energy-bill rebates and fee-free TAFE places to ease cost-of-living pressure.", sent:"pos"},
-    {date:"2022", sort:"2022-09-08", type:"Climate Change", pos:"Powering Australia plan: legislated 43% emissions cut by 2030 and 82% renewables.", sent:"pos"},
-    {date:"2022", sort:"2022-11-01", type:"Integrity", pos:"Established the National Anti-Corruption Commission.", sent:"pos"},
-    {date:"2013", sort:"2013-07-01", type:"Disability", pos:"Created the National Disability Insurance Scheme (NDIS).", sent:"pos"},
-    {date:"2012", sort:"2012-07-01", type:"Climate Change", pos:"Clean Energy Act introduced a fixed carbon price (the \"carbon tax\") on major emitters.", sent:"neg"},
-    {date:"2009", sort:"2009-02-01", type:"Economy", pos:"GFC stimulus and Building Education Revolution, credited with avoiding recession.", sent:"pos"},
-    {date:"2008", sort:"2008-02-13", type:"Indigenous Affairs", pos:"National Apology to the Stolen Generations.", sent:"pos"},
-    {date:"2007", sort:"2007-12-01", type:"Industrial Relations", pos:"Pledged to abolish WorkChoices; later delivered the Fair Work Act.", sent:"pos"},
-    {date:"1984", sort:"1984-02-01", type:"Health", pos:"Introduced Medicare, Australia's universal public health insurance scheme.", sent:"pos"},
-    {date:"1972", sort:"1972-12-01", type:"Education", pos:"Whitlam reforms: abolished university fees and ended conscription.", sent:"pos"}
+    {date:"2025", sort:"2025-06-01", type:"Education", sent:"pos", pos:{en:"Cut 20% of student (HECS) debt for ~3 million Australians and lift the repayment threshold.", zhs:"为约300万澳大利亚人减免20%的学生（HECS）贷款，并提高还款起征点。", zht:"為約300萬澳洲人減免20%的學生（HECS）貸款，並提高還款起徵點。", ar:"شطب 20% من ديون الطلاب (HECS) لنحو 3 ملايين أسترالي ورفع عتبة السداد.", vi:"Xóa 20% nợ sinh viên (HECS) cho khoảng 3 triệu người Úc và nâng ngưỡng hoàn trả.", pa:"~30 ਲੱਖ ਆਸਟ੍ਰੇਲੀਅਨਾਂ ਲਈ 20% (HECS) ਕਰਜ਼ਾ ਮੁਆਫ ਤੇ ਮੋੜਨ ਦੀ ਹੱਦ ਵਧਾਈ।"}},
+    {date:"2025", sort:"2025-05-20", type:"Health", sent:"pos", pos:{en:"Expand Medicare bulk-billing, cap PBS scripts at $25 and roll out more urgent-care clinics.", zhs:"扩大Medicare全额报销，将PBS处方封顶在25澳元，并增设更多急诊诊所。", zht:"擴大Medicare全額報銷，將PBS處方封頂在25澳元，並增設更多急診診所。", ar:"توسيع الفوترة الكاملة في ميديكير، وتحديد سقف وصفات PBS بـ25 دولاراً، وفتح المزيد من عيادات الرعاية العاجلة.", vi:"Mở rộng bulk-billing Medicare, giới hạn đơn thuốc PBS ở 25 đô và mở thêm phòng khám cấp cứu.", pa:"Medicare ਬਲਕ-ਬਿਲਿੰਗ ਵਧਾਉਣਾ, PBS ਨੁਸਖੇ $25 'ਤੇ ਸੀਮਤ, ਤੇ ਹੋਰ ਅਰਜੈਂਟ-ਕੇਅਰ ਕਲੀਨਿਕ।"}},
+    {date:"2022–25", sort:"2024-05-01", type:"Cost of Living", sent:"pos", pos:{en:"$20bn+ in energy-bill rebates and fee-free TAFE places to ease cost-of-living pressure.", zhs:"提供逾200亿澳元电费补贴和免费TAFE名额，以缓解生活成本压力。", zht:"提供逾200億澳元電費補貼和免費TAFE名額，以紓緩生活成本壓力。", ar:"أكثر من 20 مليار دولار في خصومات فواتير الكهرباء ومقاعد TAFE مجانية لتخفيف ضغط تكلفة المعيشة.", vi:"Hơn 20 tỷ đô hoàn tiền điện và suất học TAFE miễn phí để giảm áp lực chi phí sinh hoạt.", pa:"ਜੀਵਨ-ਲਾਗਤ ਦਬਾਅ ਘਟਾਉਣ ਲਈ $20 ਬਿਲੀਅਨ+ ਬਿਜਲੀ ਛੋਟਾਂ ਤੇ ਮੁਫਤ TAFE ਸੀਟਾਂ।"}},
+    {date:"2022", sort:"2022-09-08", type:"Climate Change", sent:"pos", pos:{en:"Powering Australia plan: legislated 43% emissions cut by 2030 and 82% renewables.", zhs:"“为澳大利亚供能”计划：立法确定到2030年减排43%、可再生能源占比82%。", zht:"「為澳洲供能」計劃：立法確定到2030年減排43%、可再生能源佔比82%。", ar:"خطة «تشغيل أستراليا»: تشريع خفض الانبعاثات 43% بحلول 2030 و82% طاقة متجددة.", vi:"Kế hoạch “Powering Australia”: luật hóa giảm 43% phát thải vào 2030 và 82% năng lượng tái tạo.", pa:"“ਪਾਵਰਿੰਗ ਆਸਟ੍ਰੇਲੀਆ” ਯੋਜਨਾ: 2030 ਤੱਕ 43% ਨਿਕਾਸੀ ਕਟੌਤੀ ਤੇ 82% ਨਵਿਆਉਣਯੋਗ।"}},
+    {date:"2022", sort:"2022-11-01", type:"Integrity", sent:"pos", pos:{en:"Established the National Anti-Corruption Commission.", zhs:"设立国家反腐败委员会。", zht:"設立國家反腐敗委員會。", ar:"إنشاء اللجنة الوطنية لمكافحة الفساد.", vi:"Thành lập Ủy ban Chống Tham nhũng Quốc gia.", pa:"ਨੈਸ਼ਨਲ ਐਂਟੀ-ਕਰੱਪਸ਼ਨ ਕਮਿਸ਼ਨ ਦੀ ਸਥਾਪਨਾ।"}},
+    {date:"2013", sort:"2013-07-01", type:"Disability", sent:"pos", pos:{en:"Created the National Disability Insurance Scheme (NDIS).", zhs:"创建国家残障保险计划（NDIS）。", zht:"創建國家殘障保險計劃（NDIS）。", ar:"إنشاء برنامج التأمين الوطني للإعاقة (NDIS).", vi:"Lập Chương trình Bảo hiểm Khuyết tật Quốc gia (NDIS).", pa:"ਨੈਸ਼ਨਲ ਡਿਸਅਬਿਲਿਟੀ ਇੰਸ਼ੋਰੈਂਸ ਸਕੀਮ (NDIS) ਬਣਾਈ।"}},
+    {date:"2012", sort:"2012-07-01", type:"Climate Change", sent:"neg", pos:{en:"Clean Energy Act introduced a fixed carbon price (the “carbon tax”) on major emitters.", zhs:"《清洁能源法》对主要排放者实行固定碳价（即“碳税”）。", zht:"《清潔能源法》對主要排放者實行固定碳價（即「碳稅」）。", ar:"قانون الطاقة النظيفة فرض سعراً ثابتاً للكربون («ضريبة الكربون») على كبار المُلوِّثين.", vi:"Đạo luật Năng lượng Sạch áp giá carbon cố định (“thuế carbon”) lên các nguồn phát thải lớn.", pa:"ਕਲੀਨ ਐਨਰਜੀ ਐਕਟ ਨੇ ਵੱਡੇ ਪ੍ਰਦੂਸ਼ਕਾਂ 'ਤੇ ਨਿਸ਼ਚਿਤ ਕਾਰਬਨ ਕੀਮਤ (“ਕਾਰਬਨ ਟੈਕਸ”) ਲਾਈ।"}},
+    {date:"2009", sort:"2009-02-01", type:"Economy", sent:"pos", pos:{en:"GFC stimulus and Building Education Revolution, credited with avoiding recession.", zhs:"全球金融危机刺激计划和“教育革命建设”，被认为帮助避免了经济衰退。", zht:"全球金融危機刺激計劃和「教育革命建設」，被認為幫助避免了經濟衰退。", ar:"حوافز الأزمة المالية العالمية ومشروع «ثورة بناء التعليم»، ويُنسب إليها تجنّب الركود.", vi:"Gói kích thích khủng hoảng tài chính và “Building Education Revolution”, được ghi nhận giúp tránh suy thoái.", pa:"ਜੀਐਫਸੀ ਪ੍ਰੋਤਸਾਹਨ ਤੇ “ਬਿਲਡਿੰਗ ਐਜੂਕੇਸ਼ਨ ਰੈਵੋਲਿਊਸ਼ਨ”, ਮੰਦੀ ਟਾਲਣ ਦਾ ਸਿਹਰਾ।"}},
+    {date:"2008", sort:"2008-02-13", type:"Indigenous Affairs", sent:"pos", pos:{en:"National Apology to the Stolen Generations.", zhs:"向“被偷走的一代”发表国家道歉。", zht:"向「被偷走的一代」發表國家道歉。", ar:"اعتذار وطني لـ«الأجيال المسروقة».", vi:"Lời Xin lỗi Quốc gia đối với “Thế hệ bị đánh cắp”.", pa:"“ਚੋਰੀ ਹੋਈ ਪੀੜ੍ਹੀ” ਤੋਂ ਰਾਸ਼ਟਰੀ ਮੁਆਫੀ।"}},
+    {date:"2007", sort:"2007-12-01", type:"Industrial Relations", sent:"pos", pos:{en:"Pledged to abolish WorkChoices; later delivered the Fair Work Act.", zhs:"承诺废除WorkChoices；后来出台《公平工作法》。", zht:"承諾廢除WorkChoices；後來出台《公平工作法》。", ar:"تعهّد بإلغاء قانون WorkChoices؛ ثم أصدر قانون العمل العادل.", vi:"Cam kết bãi bỏ WorkChoices; sau đó ban hành Đạo luật Fair Work.", pa:"WorkChoices ਖਤਮ ਕਰਨ ਦਾ ਵਾਅਦਾ; ਬਾਅਦ 'ਚ ਫੇਅਰ ਵਰਕ ਐਕਟ ਲਿਆਂਦਾ।"}},
+    {date:"1984", sort:"1984-02-01", type:"Health", sent:"pos", pos:{en:"Introduced Medicare, Australia's universal public health insurance scheme.", zhs:"推出Medicare，澳大利亚的全民公共医疗保险制度。", zht:"推出Medicare，澳洲的全民公共醫療保險制度。", ar:"إدخال ميديكير، نظام التأمين الصحي العام الشامل في أستراليا.", vi:"Giới thiệu Medicare, hệ thống bảo hiểm y tế công toàn dân của Úc.", pa:"Medicare ਸ਼ੁਰੂ ਕੀਤਾ, ਆਸਟ੍ਰੇਲੀਆ ਦੀ ਸਰਬ-ਵਿਆਪਕ ਜਨਤਕ ਸਿਹਤ ਬੀਮਾ ਯੋਜਨਾ।"}},
+    {date:"1972", sort:"1972-12-01", type:"Education", sent:"pos", pos:{en:"Whitlam reforms: abolished university fees and ended conscription.", zhs:"惠特拉姆改革：取消大学学费并结束征兵。", zht:"惠特拉姆改革：取消大學學費並結束徵兵。", ar:"إصلاحات ويتلام: إلغاء رسوم الجامعة وإنهاء التجنيد الإجباري.", vi:"Cải cách Whitlam: bãi bỏ học phí đại học và chấm dứt chế độ quân dịch.", pa:"ਵਿਟਲਮ ਸੁਧਾਰ: ਯੂਨੀਵਰਸਿਟੀ ਫੀਸ ਖਤਮ ਤੇ ਭਰਤੀ (ਕਨਸਕ੍ਰਿਪਸ਼ਨ) ਬੰਦ।"}}
   ],
   liberal: [
-    {date:"2025", sort:"2025-04-01", type:"Immigration", pos:"Election platform to cut permanent migration and reduce the refugee intake (Dutton).", sent:"neg"},
-    {date:"2024–25", sort:"2024-06-19", type:"Energy", pos:"Proposed building seven government-owned nuclear power plants in place of a renewables-led grid.", sent:"neg"},
-    {date:"2021", sort:"2021-09-15", type:"Defence", pos:"Signed the AUKUS security pact for nuclear-powered submarines (Morrison).", sent:"pos"},
-    {date:"2020", sort:"2020-03-30", type:"Economy", pos:"JobKeeper wage subsidy and pandemic support during COVID-19.", sent:"pos"},
-    {date:"2014", sort:"2014-05-13", type:"Welfare", pos:"2014 austerity budget with proposed welfare, health and university cuts (Abbott/Hockey).", sent:"neg"},
-    {date:"2013", sort:"2013-09-18", type:"Immigration", pos:"Operation Sovereign Borders \"stop the boats\" maritime turn-back policy.", sent:"pos"},
-    {date:"2013", sort:"2013-07-17", type:"Climate Change", pos:"Repealed the carbon price (\"axe the tax\") (Abbott).", sent:"pos"},
-    {date:"2005", sort:"2005-05-26", type:"Industrial Relations", pos:"WorkChoices laws cutting unfair-dismissal protections and award conditions (Howard).", sent:"neg"},
-    {date:"2000", sort:"2000-07-01", type:"Tax", pos:"Introduced the Goods and Services Tax (GST) (Howard).", sent:"neg"},
-    {date:"1996", sort:"1996-05-10", type:"Gun Control", pos:"National Firearms Agreement and gun buyback after the Port Arthur massacre (Howard).", sent:"pos"}
+    {date:"2025", sort:"2025-04-01", type:"Immigration", sent:"neg", pos:{en:"Election platform to cut permanent migration and reduce the refugee intake (Dutton).", zhs:"选举纲领：削减永久移民并减少难民接收（达顿）。", zht:"選舉綱領：削減永久移民並減少難民接收（達頓）。", ar:"برنامج انتخابي لخفض الهجرة الدائمة وتقليل استقبال اللاجئين (داتون).", vi:"Cương lĩnh bầu cử: cắt giảm di cư vĩnh viễn và giảm tiếp nhận tị nạn (Dutton).", pa:"ਚੋਣ ਮੰਚ: ਪੱਕੀ ਇਮੀਗ੍ਰੇਸ਼ਨ ਘਟਾਉਣਾ ਤੇ ਸ਼ਰਨਾਰਥੀ ਗਿਣਤੀ ਘਟਾਉਣਾ (ਡੱਟਨ)।"}},
+    {date:"2024–25", sort:"2024-06-19", type:"Energy", sent:"neg", pos:{en:"Proposed building seven government-owned nuclear power plants in place of a renewables-led grid.", zhs:"提议兴建七座政府所有的核电站，取代以可再生能源为主的电网。", zht:"提議興建七座政府所有的核電站，取代以可再生能源為主的電網。", ar:"اقتراح بناء سبع محطات نووية مملوكة للحكومة بدلاً من شبكة تعتمد على المتجددة.", vi:"Đề xuất xây bảy nhà máy điện hạt nhân nhà nước thay cho lưới điện dựa vào tái tạo.", pa:"ਨਵਿਆਉਣਯੋਗ-ਅਧਾਰਿਤ ਗਰਿੱਡ ਦੀ ਥਾਂ ਸੱਤ ਸਰਕਾਰੀ ਪਰਮਾਣੂ ਪਲਾਂਟ ਬਣਾਉਣ ਦੀ ਤਜਵੀਜ਼।"}},
+    {date:"2021", sort:"2021-09-15", type:"Defence", sent:"pos", pos:{en:"Signed the AUKUS security pact for nuclear-powered submarines (Morrison).", zhs:"签署AUKUS安全协议以获取核动力潜艇（莫里森）。", zht:"簽署AUKUS安全協議以獲取核動力潛艇（莫里森）。", ar:"توقيع اتفاق أوكوس الأمني للحصول على غواصات نووية (موريسون).", vi:"Ký hiệp ước an ninh AUKUS để có tàu ngầm hạt nhân (Morrison).", pa:"ਪਰਮਾਣੂ ਪਣਡੁੱਬੀਆਂ ਲਈ AUKUS ਸੁਰੱਖਿਆ ਸਮਝੌਤਾ (ਮੌਰੀਸਨ)।"}},
+    {date:"2020", sort:"2020-03-30", type:"Economy", sent:"pos", pos:{en:"JobKeeper wage subsidy and pandemic support during COVID-19.", zhs:"新冠疫情期间推出JobKeeper工资补贴及纾困措施。", zht:"新冠疫情期間推出JobKeeper工資補貼及紓困措施。", ar:"دعم أجور JobKeeper ودعم الجائحة خلال كوفيد-19.", vi:"Trợ cấp lương JobKeeper và hỗ trợ đại dịch trong COVID-19.", pa:"ਕੋਵਿਡ-19 ਦੌਰਾਨ JobKeeper ਤਨਖਾਹ ਸਬਸਿਡੀ ਤੇ ਮਹਾਂਮਾਰੀ ਸਹਾਇਤਾ।"}},
+    {date:"2014", sort:"2014-05-13", type:"Welfare", sent:"neg", pos:{en:"2014 austerity budget with proposed welfare, health and university cuts (Abbott/Hockey).", zhs:"2014年紧缩预算，提议削减福利、医疗和大学经费（阿博特／霍奇）。", zht:"2014年緊縮預算，提議削減福利、醫療和大學經費（阿博特／霍奇）。", ar:"ميزانية تقشف 2014 مع خفض مقترح للرعاية والصحة والجامعات (آبوت/هوكي).", vi:"Ngân sách thắt lưng buộc bụng 2014 đề xuất cắt phúc lợi, y tế và đại học (Abbott/Hockey).", pa:"2014 ਕਿਫਾਇਤੀ ਬਜਟ, ਭਲਾਈ, ਸਿਹਤ ਤੇ ਯੂਨੀਵਰਸਿਟੀ ਕਟੌਤੀਆਂ ਦੀ ਤਜਵੀਜ਼ (ਐਬਟ/ਹੌਕੀ)।"}},
+    {date:"2013", sort:"2013-09-18", type:"Immigration", sent:"pos", pos:{en:"Operation Sovereign Borders “stop the boats” maritime turn-back policy.", zhs:"“主权边界行动”——“阻止船只”的海上遣返政策。", zht:"「主權邊界行動」——「阻止船隻」的海上遣返政策。", ar:"عملية «الحدود السيادية» سياسة إعادة القوارب «أوقفوا القوارب».", vi:"Chiến dịch Sovereign Borders — chính sách đẩy lùi tàu “chặn thuyền”.", pa:"ਆਪਰੇਸ਼ਨ ਸੌਵਰੇਨ ਬਾਰਡਰਜ਼ — “ਕਿਸ਼ਤੀਆਂ ਰੋਕੋ” ਸਮੁੰਦਰੀ ਵਾਪਸੀ ਨੀਤੀ।"}},
+    {date:"2013", sort:"2013-07-17", type:"Climate Change", sent:"pos", pos:{en:"Repealed the carbon price (“axe the tax”) (Abbott).", zhs:"废除碳价（“砍掉碳税”）（阿博特）。", zht:"廢除碳價（「砍掉碳稅」）（阿博特）。", ar:"إلغاء سعر الكربون («ألغوا الضريبة») (آبوت).", vi:"Bãi bỏ giá carbon (“dẹp thuế”) (Abbott).", pa:"ਕਾਰਬਨ ਕੀਮਤ ਰੱਦ (“ਟੈਕਸ ਹਟਾਓ”) (ਐਬਟ)।"}},
+    {date:"2005", sort:"2005-05-26", type:"Industrial Relations", sent:"neg", pos:{en:"WorkChoices laws cutting unfair-dismissal protections and award conditions (Howard).", zhs:"WorkChoices法律削减不公平解雇保护和裁定待遇（霍华德）。", zht:"WorkChoices法律削減不公平解僱保護和裁定待遇（霍華德）。", ar:"قوانين WorkChoices التي قلّصت حماية الفصل التعسفي وشروط العمل (هاوارد).", vi:"Luật WorkChoices cắt giảm bảo vệ sa thải bất công và điều kiện thỏa ước (Howard).", pa:"WorkChoices ਕਾਨੂੰਨ ਨੇ ਅਨਿਆਂਪੂਰਨ ਬਰਖਾਸਤਗੀ ਸੁਰੱਖਿਆ ਤੇ ਸ਼ਰਤਾਂ ਘਟਾਈਆਂ (ਹਾਵਰਡ)।"}},
+    {date:"2000", sort:"2000-07-01", type:"Tax", sent:"neg", pos:{en:"Introduced the Goods and Services Tax (GST) (Howard).", zhs:"推出商品及服务税（GST）（霍华德）。", zht:"推出商品及服務稅（GST）（霍華德）。", ar:"إدخال ضريبة السلع والخدمات (GST) (هاوارد).", vi:"Giới thiệu Thuế Hàng hóa và Dịch vụ (GST) (Howard).", pa:"ਗੁਡਜ਼ ਐਂਡ ਸਰਵਿਸਿਜ਼ ਟੈਕਸ (GST) ਸ਼ੁਰੂ (ਹਾਵਰਡ)।"}},
+    {date:"1996", sort:"1996-05-10", type:"Gun Control", sent:"pos", pos:{en:"National Firearms Agreement and gun buyback after the Port Arthur massacre (Howard).", zhs:"在亚瑟港枪击惨案后达成《全国枪支协议》并回购枪支（霍华德）。", zht:"在亞瑟港槍擊慘案後達成《全國槍械協議》並回購槍械（霍華德）。", ar:"اتفاق الأسلحة الوطني وإعادة شراء الأسلحة بعد مجزرة بورت آرثر (هاوارد).", vi:"Thỏa thuận Súng Quốc gia và mua lại súng sau thảm sát Port Arthur (Howard).", pa:"ਪੋਰਟ ਆਰਥਰ ਕਤਲੇਆਮ ਤੋਂ ਬਾਅਦ ਨੈਸ਼ਨਲ ਫਾਇਰਆਰਮਜ਼ ਐਗਰੀਮੈਂਟ ਤੇ ਬੰਦੂਕ ਵਾਪਸ-ਖਰੀਦ (ਹਾਵਰਡ)।"}}
   ],
   greens: [
-    {date:"2025", sort:"2025-04-01", type:"Housing", pos:"Wind back negative gearing and the CGT discount on second and subsequent properties.", sent:"pos"},
-    {date:"2025", sort:"2025-03-15", type:"Health", pos:"Extend Medicare to cover dental and mental-health care.", sent:"pos"},
-    {date:"2022", sort:"2022-07-01", type:"Climate Change", pos:"Used Senate balance of power to push for stronger climate targets and end new coal/gas.", sent:"pos"},
-    {date:"2012", sort:"2012-07-01", type:"Health", pos:"Secured dental care into Medicare for children in the minority-government deal.", sent:"pos"},
-    {date:"2011–12", sort:"2011-11-08", type:"Climate Change", pos:"Negotiated the carbon-pricing scheme and Clean Energy Finance Corporation with Labor.", sent:"neg"},
-    {date:"2009", sort:"2009-12-01", type:"Climate Change", pos:"Voted down Labor's CPRS emissions scheme, demanding stronger action.", sent:"neg"},
-    {date:"2003", sort:"2003-03-20", type:"Foreign Policy", pos:"Opposed the Iraq War.", sent:"pos"},
-    {date:"1992", sort:"1992-08-30", type:"Environment", pos:"Founded federally on environmental protection, anti-nuclear and social-justice principles.", sent:"pos"}
+    {date:"2025", sort:"2025-04-01", type:"Housing", sent:"pos", pos:{en:"Wind back negative gearing and the CGT discount on second and subsequent properties.", zhs:"缩减对第二套及以上房产的负扣税和资本利得税优惠。", zht:"縮減對第二套及以上房產的負扣稅和資本利得稅優惠。", ar:"تقليص خصم الفائدة العقارية وخصم أرباح رأس المال على العقار الثاني وما بعده.", vi:"Thu hẹp negative gearing và ưu đãi thuế lãi vốn đối với bất động sản thứ hai trở đi.", pa:"ਦੂਜੀ ਤੇ ਅੱਗੇ ਜਾਇਦਾਦਾਂ 'ਤੇ ਨੈਗੇਟਿਵ ਗੀਅਰਿੰਗ ਤੇ CGT ਛੋਟ ਘਟਾਉਣਾ।"}},
+    {date:"2025", sort:"2025-03-15", type:"Health", sent:"pos", pos:{en:"Extend Medicare to cover dental and mental-health care.", zhs:"将Medicare扩展至涵盖牙科和心理健康服务。", zht:"將Medicare擴展至涵蓋牙科和心理健康服務。", ar:"توسيع ميديكير ليشمل رعاية الأسنان والصحة النفسية.", vi:"Mở rộng Medicare để bao gồm nha khoa và sức khỏe tâm thần.", pa:"Medicare ਨੂੰ ਦੰਦਾਂ ਤੇ ਮਾਨਸਿਕ ਸਿਹਤ ਤੱਕ ਵਧਾਉਣਾ।"}},
+    {date:"2022", sort:"2022-07-01", type:"Climate Change", sent:"pos", pos:{en:"Used Senate balance of power to push for stronger climate targets and end new coal/gas.", zhs:"利用参议院关键席位推动更强的气候目标并终止新建煤气项目。", zht:"利用參議院關鍵席位推動更強的氣候目標並終止新建煤氣項目。", ar:"استخدام توازن القوى في مجلس الشيوخ للدفع نحو أهداف مناخية أقوى وإنهاء الفحم والغاز الجديد.", vi:"Dùng thế cân bằng quyền lực ở Thượng viện để thúc đẩy mục tiêu khí hậu mạnh hơn và chấm dứt than/khí mới.", pa:"ਸੈਨੇਟ ਸੰਤੁਲਨ ਵਰਤ ਕੇ ਮਜ਼ਬੂਤ ਜਲਵਾਯੂ ਟੀਚੇ ਤੇ ਨਵੇਂ ਕੋਲਾ/ਗੈਸ ਬੰਦ ਕਰਨ ਦਾ ਦਬਾਅ।"}},
+    {date:"2012", sort:"2012-07-01", type:"Health", sent:"pos", pos:{en:"Secured dental care into Medicare for children in the minority-government deal.", zhs:"在少数派政府协议中争取到为儿童提供Medicare牙科服务。", zht:"在少數派政府協議中爭取到為兒童提供Medicare牙科服務。", ar:"تأمين رعاية الأسنان للأطفال ضمن ميديكير في اتفاق حكومة الأقلية.", vi:"Đưa nha khoa trẻ em vào Medicare trong thỏa thuận chính phủ thiểu số.", pa:"ਘੱਟ-ਗਿਣਤੀ ਸਰਕਾਰ ਸਮਝੌਤੇ 'ਚ ਬੱਚਿਆਂ ਲਈ Medicare ਦੰਦ ਸੇਵਾ ਹਾਸਲ।"}},
+    {date:"2011–12", sort:"2011-11-08", type:"Climate Change", sent:"neg", pos:{en:"Negotiated the carbon-pricing scheme and Clean Energy Finance Corporation with Labor.", zhs:"与工党谈判达成碳定价方案及清洁能源金融公司。", zht:"與工黨談判達成碳定價方案及清潔能源金融公司。", ar:"التفاوض على نظام تسعير الكربون ومؤسسة تمويل الطاقة النظيفة مع حزب العمال.", vi:"Đàm phán cơ chế định giá carbon và Clean Energy Finance Corporation với Lao động.", pa:"ਲੇਬਰ ਨਾਲ ਕਾਰਬਨ-ਕੀਮਤ ਯੋਜਨਾ ਤੇ ਕਲੀਨ ਐਨਰਜੀ ਫਾਇਨੈਂਸ ਕਾਰਪੋਰੇਸ਼ਨ ਦੀ ਗੱਲਬਾਤ।"}},
+    {date:"2009", sort:"2009-12-01", type:"Climate Change", sent:"neg", pos:{en:"Voted down Labor's CPRS emissions scheme, demanding stronger action.", zhs:"否决工党的CPRS减排方案，要求采取更有力的行动。", zht:"否決工黨的CPRS減排方案，要求採取更有力的行動。", ar:"صوّتوا ضد نظام CPRS للانبعاثات مطالبين بإجراءات أقوى.", vi:"Bác bỏ chương trình CPRS của Lao động, đòi hành động mạnh hơn.", pa:"ਲੇਬਰ ਦੀ CPRS ਨਿਕਾਸੀ ਯੋਜਨਾ ਰੱਦ ਕੀਤੀ, ਮਜ਼ਬੂਤ ਕਾਰਵਾਈ ਦੀ ਮੰਗ।"}},
+    {date:"2003", sort:"2003-03-20", type:"Foreign Policy", sent:"pos", pos:{en:"Opposed the Iraq War.", zhs:"反对伊拉克战争。", zht:"反對伊拉克戰爭。", ar:"عارضوا حرب العراق.", vi:"Phản đối Chiến tranh Iraq.", pa:"ਇਰਾਕ ਜੰਗ ਦਾ ਵਿਰੋਧ।"}},
+    {date:"1992", sort:"1992-08-30", type:"Environment", sent:"pos", pos:{en:"Founded federally on environmental protection, anti-nuclear and social-justice principles.", zhs:"联邦层面成立，以环境保护、反核及社会正义为宗旨。", zht:"聯邦層面成立，以環境保護、反核及社會正義為宗旨。", ar:"تأسّس اتحادياً على مبادئ حماية البيئة ومناهضة النووي والعدالة الاجتماعية.", vi:"Thành lập ở cấp liên bang dựa trên bảo vệ môi trường, chống hạt nhân và công bằng xã hội.", pa:"ਵਾਤਾਵਰਣ ਸੁਰੱਖਿਆ, ਪਰਮਾਣੂ-ਵਿਰੋਧ ਤੇ ਸਮਾਜਿਕ ਨਿਆਂ ਦੇ ਅਸੂਲਾਂ 'ਤੇ ਸੰਘੀ ਸਥਾਪਨਾ।"}}
   ],
   onenation: [
-    {date:"2026", sort:"2026-06-17", type:"Climate Change", pos:"Abolish net-zero targets, expand coal and gas, and ban new wind farms.", sent:"neg"},
-    {date:"2026", sort:"2026-05-01", type:"Immigration", pos:"Cap visas at 130,000/yr, deport illegal migrants and end visa \"loopholes\".", sent:"pos"},
-    {date:"2026", sort:"2026-05-02", type:"Tax", pos:"Income-splitting for families with a dependent child to cut their tax.", sent:"pos"},
-    {date:"2026", sort:"2026-05-03", type:"Water", pos:"Build new dams and ban the sale of water rights to foreign investors.", sent:"pos"},
-    {date:"2026", sort:"2026-05-04", type:"Government Spending", pos:"$90bn savings plan: reform the NDIS, abolish agencies and exit costly treaties.", sent:"neg"},
-    {date:"2021–22", sort:"2021-09-01", type:"Health (COVID)", pos:"Opposed vaccine mandates and called for a Royal Commission into the COVID response.", sent:"neg"},
-    {date:"2017", sort:"2017-08-17", type:"Islam / Civil Liberties", pos:"Called for a ban on the burqa in public spaces.", sent:"neg"},
-    {date:"1998", sort:"1998-10-03", type:"Trade", pos:"Protectionism and opposition to globalisation and free-trade agreements.", sent:"neg"},
-    {date:"1997", sort:"1997-04-11", type:"Immigration", pos:"Founded on opposition to immigration and multiculturalism.", sent:"neg"}
+    {date:"2026", sort:"2026-06-17", type:"Climate Change", sent:"neg", pos:{en:"Abolish net-zero targets, expand coal and gas, and ban new wind farms.", zhs:"废除净零目标，扩大煤炭和天然气，并禁止新建风电场。", zht:"廢除淨零目標，擴大煤炭和天然氣，並禁止新建風電場。", ar:"إلغاء أهداف صافي الصفر، وتوسيع الفحم والغاز، وحظر مزارع الرياح الجديدة.", vi:"Bãi bỏ mục tiêu net-zero, mở rộng than và khí, và cấm trang trại gió mới.", pa:"ਨੈੱਟ-ਜ਼ੀਰੋ ਟੀਚੇ ਖਤਮ, ਕੋਲਾ ਤੇ ਗੈਸ ਵਧਾਉਣਾ, ਤੇ ਨਵੇਂ ਪੌਣ-ਫਾਰਮ 'ਤੇ ਪਾਬੰਦੀ।"}},
+    {date:"2026", sort:"2026-05-01", type:"Immigration", sent:"pos", pos:{en:"Cap visas at 130,000/yr, deport illegal migrants and end visa “loopholes”.", zhs:"将签证上限定为每年13万，驱逐非法移民并堵住签证“漏洞”。", zht:"將簽證上限定為每年13萬，驅逐非法移民並堵住簽證「漏洞」。", ar:"تحديد سقف التأشيرات بـ130,000 سنوياً، وترحيل المهاجرين غير الشرعيين وإنهاء «ثغرات» التأشيرات.", vi:"Giới hạn thị thực ở 130.000/năm, trục xuất người nhập cư bất hợp pháp và chấm dứt “kẽ hở” thị thực.", pa:"ਵੀਜ਼ੇ 130,000/ਸਾਲ 'ਤੇ ਸੀਮਤ, ਗੈਰ-ਕਾਨੂੰਨੀ ਪਰਵਾਸੀ ਕੱਢਣੇ ਤੇ ਵੀਜ਼ਾ “ਖਾਮੀਆਂ” ਖਤਮ।"}},
+    {date:"2026", sort:"2026-05-02", type:"Tax", sent:"pos", pos:{en:"Income-splitting for families with a dependent child to cut their tax.", zhs:"为有受抚养子女的家庭实行收入分摊以减税。", zht:"為有受撫養子女的家庭實行收入分攤以減稅。", ar:"تقاسم الدخل للأسر التي لديها طفل معال لخفض ضرائبها.", vi:"Chia thu nhập cho gia đình có con phụ thuộc để giảm thuế.", pa:"ਨਿਰਭਰ ਬੱਚੇ ਵਾਲੇ ਪਰਿਵਾਰਾਂ ਲਈ ਆਮਦਨ-ਵੰਡ ਰਾਹੀਂ ਟੈਕਸ ਘਟਾਉਣਾ।"}},
+    {date:"2026", sort:"2026-05-03", type:"Water", sent:"pos", pos:{en:"Build new dams and ban the sale of water rights to foreign investors.", zhs:"兴建新水坝，并禁止向外国投资者出售水权。", zht:"興建新水壩，並禁止向外國投資者出售水權。", ar:"بناء سدود جديدة وحظر بيع حقوق المياه للمستثمرين الأجانب.", vi:"Xây đập mới và cấm bán quyền nước cho nhà đầu tư nước ngoài.", pa:"ਨਵੇਂ ਡੈਮ ਬਣਾਉਣੇ ਤੇ ਵਿਦੇਸ਼ੀ ਨਿਵੇਸ਼ਕਾਂ ਨੂੰ ਪਾਣੀ ਹੱਕ ਵੇਚਣ 'ਤੇ ਪਾਬੰਦੀ।"}},
+    {date:"2026", sort:"2026-05-04", type:"Government Spending", sent:"neg", pos:{en:"$90bn savings plan: reform the NDIS, abolish agencies and exit costly treaties.", zhs:"900亿澳元节支计划：改革NDIS、撤销机构并退出高成本条约。", zht:"900億澳元節支計劃：改革NDIS、撤銷機構並退出高成本條約。", ar:"خطة توفير 90 مليار دولار: إصلاح NDIS، وإلغاء وكالات، والخروج من معاهدات مكلفة.", vi:"Kế hoạch tiết kiệm 90 tỷ đô: cải tổ NDIS, bãi bỏ cơ quan và rút khỏi hiệp ước tốn kém.", pa:"$90 ਬਿਲੀਅਨ ਬੱਚਤ ਯੋਜਨਾ: NDIS ਸੁਧਾਰ, ਏਜੰਸੀਆਂ ਖਤਮ ਤੇ ਮਹਿੰਗੀਆਂ ਸੰਧੀਆਂ ਤੋਂ ਬਾਹਰ।"}},
+    {date:"2021–22", sort:"2021-09-01", type:"Health (COVID)", sent:"neg", pos:{en:"Opposed vaccine mandates and called for a Royal Commission into the COVID response.", zhs:"反对疫苗强制令，并要求就新冠应对成立皇家委员会调查。", zht:"反對疫苗強制令，並要求就新冠應對成立皇家委員會調查。", ar:"عارضوا إلزامية اللقاح ودعوا إلى لجنة ملكية للتحقيق في الاستجابة لكوفيد.", vi:"Phản đối bắt buộc tiêm vaccine và kêu gọi Ủy ban Hoàng gia điều tra ứng phó COVID.", pa:"ਟੀਕਾ ਲਾਜ਼ਮੀ ਦਾ ਵਿਰੋਧ ਤੇ ਕੋਵਿਡ ਜਵਾਬ 'ਤੇ ਰਾਇਲ ਕਮਿਸ਼ਨ ਦੀ ਮੰਗ।"}},
+    {date:"2017", sort:"2017-08-17", type:"Islam / Civil Liberties", sent:"neg", pos:{en:"Called for a ban on the burqa in public spaces.", zhs:"呼吁在公共场所禁止布卡。", zht:"呼籲在公共場所禁止布卡。", ar:"دعوا إلى حظر البرقع في الأماكن العامة.", vi:"Kêu gọi cấm burqa nơi công cộng.", pa:"ਜਨਤਕ ਥਾਵਾਂ 'ਤੇ ਬੁਰਕੇ 'ਤੇ ਪਾਬੰਦੀ ਦੀ ਮੰਗ।"}},
+    {date:"1998", sort:"1998-10-03", type:"Trade", sent:"neg", pos:{en:"Protectionism and opposition to globalisation and free-trade agreements.", zhs:"保护主义，反对全球化和自由贸易协定。", zht:"保護主義，反對全球化和自由貿易協定。", ar:"الحمائية ومعارضة العولمة واتفاقيات التجارة الحرة.", vi:"Chủ nghĩa bảo hộ và phản đối toàn cầu hóa và các hiệp định thương mại tự do.", pa:"ਸੁਰੱਖਿਆਵਾਦ ਤੇ ਵਿਸ਼ਵੀਕਰਨ ਅਤੇ ਮੁਕਤ-ਵਪਾਰ ਸਮਝੌਤਿਆਂ ਦਾ ਵਿਰੋਧ।"}},
+    {date:"1997", sort:"1997-04-11", type:"Immigration", sent:"neg", pos:{en:"Founded on opposition to immigration and multiculturalism.", zhs:"以反对移民和多元文化主义为创党宗旨。", zht:"以反對移民和多元文化主義為創黨宗旨。", ar:"تأسّس على معارضة الهجرة والتعددية الثقافية.", vi:"Thành lập dựa trên việc phản đối nhập cư và đa văn hóa.", pa:"ਇਮੀਗ੍ਰੇਸ਼ਨ ਤੇ ਬਹੁ-ਸੱਭਿਆਚਾਰਵਾਦ ਦੇ ਵਿਰੋਧ 'ਤੇ ਸਥਾਪਨਾ।"}}
   ]
 };
 
-const SENT_LABEL = {pos:"Positive", neg:"Negative"};
+let lang = "en";
 let current = "labor";
 
+function applyStatic(){
+  const u = UI[lang];
+  document.documentElement.lang = (lang==="zhs"?"zh-Hans":lang==="zht"?"zh-Hant":lang);
+  document.documentElement.dir = (lang==="ar"?"rtl":"ltr");
+  document.title = u.title;
+  document.getElementById("pageTitle").textContent = u.title;
+  document.getElementById("pageSub").textContent = u.sub;
+  document.getElementById("langLabel").textContent = u.langLabel;
+  document.getElementById("filterLabel").textContent = u.filterLabel;
+  document.querySelectorAll(".tab").forEach(b=>{ b.textContent = TABS[b.dataset.tab][lang]; });
+  document.querySelectorAll(".h-date").forEach(e=>e.textContent=u.colDate);
+  document.querySelectorAll(".h-type").forEach(e=>e.textContent=u.colType);
+  document.querySelectorAll(".h-pol").forEach(e=>e.textContent=u.colPol);
+  document.querySelectorAll(".h-sent").forEach(e=>e.textContent=u.colSent);
+  document.getElementById("legend").innerHTML =
+    `<b>${u.legTitle}</b> <span class="sent pos">${u.sentPos}</span> ${u.legPos} &nbsp;·&nbsp; <span class="sent neg">${u.sentNeg}</span> ${u.legNeg} ${u.legNote}`;
+  document.getElementById("footer").textContent = u.footer;
+}
+
+function rebuildFilter(){
+  const u = UI[lang];
+  const sel = document.getElementById("typeFilter");
+  const prev = sel.value;
+  const types = [...new Set(DATA[current].map(r=>r.type))];
+  sel.innerHTML = `<option value="all">${u.allTypes}</option>`+
+    types.map(t=>`<option value="${t}">${TYPES[t][lang]}</option>`).join("");
+  if(prev && [...sel.options].some(o=>o.value===prev)) sel.value = prev;
+}
+
 function render(){
+  const u = UI[lang];
   const rows = [...DATA[current]].sort((a,b)=>b.sort.localeCompare(a.sort));
   const filter = document.getElementById("typeFilter").value;
   const tbody = document.getElementById("body-"+current);
@@ -150,25 +236,23 @@ function render(){
   rows.forEach(r=>{
     if(filter!=="all" && r.type!==filter) return;
     shown++;
+    const dateText = r.ongoing ? u.ongoing : r.date;
+    const sentText = r.sent==="pos" ? u.sentPos : u.sentNeg;
     const tr = document.createElement("tr");
-    tr.innerHTML = `<td class="date">${r.date}</td>`+
-      `<td><span class="type">${r.type}</span></td>`+
-      `<td>${r.pos}</td>`+
-      `<td><span class="sent ${r.sent}">${SENT_LABEL[r.sent]}</span></td>`;
+    tr.innerHTML = `<td class="date">${dateText}</td>`+
+      `<td><span class="type">${TYPES[r.type][lang]}</span></td>`+
+      `<td>${r.pos[lang]}</td>`+
+      `<td><span class="sent ${r.sent}">${sentText}</span></td>`;
     tbody.appendChild(tr);
   });
-  document.getElementById("count").textContent = shown+" of "+rows.length+" policies";
+  document.getElementById("count").textContent = `${shown} / ${rows.length} ${u.unit}`;
 }
 
-function rebuildFilter(){
-  const sel = document.getElementById("typeFilter");
-  const types = [...new Set(DATA[current].map(r=>r.type))].sort();
-  sel.innerHTML = '<option value="all">All types</option>'+
-    types.map(t=>`<option value="${t}">${t}</option>`).join("");
-}
-
+document.getElementById("langSel").addEventListener("change", e=>{
+  lang = e.target.value;
+  applyStatic(); rebuildFilter(); render();
+});
 document.getElementById("typeFilter").addEventListener("change", render);
-
 document.querySelectorAll(".tab").forEach(btn=>{
   btn.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
@@ -176,13 +260,11 @@ document.querySelectorAll(".tab").forEach(btn=>{
     btn.classList.add("active");
     current = btn.dataset.tab;
     document.getElementById("panel-"+current).classList.add("active");
-    rebuildFilter();
-    render();
+    rebuildFilter(); render();
   });
 });
 
-rebuildFilter();
-render();
+applyStatic(); rebuildFilter(); render();
 </script>
 </body>
 </html>

@@ -12,27 +12,30 @@
   }
   *{box-sizing:border-box}
   body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    background:var(--bg);color:var(--ink);line-height:1.5}
+    background:var(--bg);color:var(--ink);line-height:1.55}
   header{padding:28px 20px 18px;max-width:1080px;margin:0 auto}
   h1{margin:0 0 4px;font-size:24px}
-  .sub{color:var(--muted);font-size:14px;margin:0}
+  .sub{color:var(--muted);font-size:14px;margin:0;max-width:760px}
   .wrap{max-width:1080px;margin:0 auto;padding:0 20px 60px}
-  .tabs{display:flex;gap:6px;border-bottom:2px solid var(--line);margin:18px 0 0}
-  .tab{padding:11px 20px;cursor:pointer;border:none;background:none;font-size:15px;
+  .topbar{display:flex;justify-content:flex-end;max-width:1080px;margin:0 auto;padding:8px 20px 0}
+  .langbox{display:flex;align-items:center;gap:8px}
+  .langbox label{font-size:13px;color:var(--muted);font-weight:600}
+  .tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:2px solid var(--line);margin:18px 0 0}
+  .tab{padding:11px 18px;cursor:pointer;border:none;background:none;font-size:15px;
     font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px}
   .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
   .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:18px 0 12px}
   .controls label{font-size:13px;color:var(--muted);font-weight:600}
   select{padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);
     font-size:14px;color:var(--ink)}
-  .count{font-size:13px;color:var(--muted);margin-left:auto}
+  .count{font-size:13px;color:var(--muted);margin-inline-start:auto}
   .panel{display:none}
   .panel.active{display:block}
   table{width:100%;border-collapse:collapse;background:var(--card);border-radius:12px;
     overflow:hidden;box-shadow:0 1px 3px rgba(20,30,50,.06)}
-  thead th{background:#eef2f7;text-align:left;padding:12px 14px;font-size:12px;
+  thead th{background:#eef2f7;text-align:start;padding:12px 14px;font-size:12px;
     text-transform:uppercase;letter-spacing:.4px;color:var(--muted);border-bottom:1px solid var(--line)}
-  tbody td{padding:13px 14px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:top}
+  tbody td{padding:13px 14px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:top;text-align:start}
   tbody tr:last-child td{border-bottom:none}
   tbody tr:hover{background:#fafcff}
   .date{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--muted);font-weight:600}
@@ -44,97 +47,168 @@
   .legend{font-size:12.5px;color:var(--muted);margin:10px 2px 0}
   .legend b{color:var(--ink)}
   footer{max-width:1080px;margin:0 auto;padding:0 20px 50px;font-size:12px;color:var(--muted)}
-  footer a{color:var(--accent)}
   @media(max-width:640px){thead th:nth-child(3),tbody td:nth-child(3){display:none}}
 </style>
 </head>
 <body>
+<div class="topbar">
+  <div class="langbox">
+    <label id="langLabel" for="langSel">Language</label>
+    <select id="langSel">
+      <option value="en">English</option>
+      <option value="zhs">简体中文</option>
+      <option value="zht">繁體中文</option>
+      <option value="ar">العربية</option>
+      <option value="vi">Tiếng Việt</option>
+      <option value="pa">ਪੰਜਾਬੀ</option>
+    </select>
+  </div>
+</div>
 <header>
-  <h1>Australian Politicians — Policy Tracker</h1>
-  <p class="sub">Policy positions over each politician's career, newest first. Filter by policy type; sentiment shows how the <b>public</b> broadly received the policy.</p>
+  <h1 id="pageTitle"></h1>
+  <p class="sub" id="pageSub"></p>
 </header>
 
 <div class="wrap">
   <div class="tabs" id="tabs">
-    <button class="tab active" data-tab="hanson">Pauline Hanson</button>
-    <button class="tab" data-tab="albanese">Anthony Albanese</button>
+    <button class="tab active" data-tab="hanson"></button>
+    <button class="tab" data-tab="albanese"></button>
   </div>
 
   <div class="controls">
-    <label for="typeFilter">Policy type:</label>
-    <select id="typeFilter"><option value="all">All types</option></select>
+    <label id="filterLabel" for="typeFilter"></label>
+    <select id="typeFilter"></select>
     <span class="count" id="count"></span>
   </div>
 
-  <!-- HANSON -->
   <div class="panel active" id="panel-hanson">
-    <table>
-      <thead><tr><th>Date</th><th>Policy type</th><th>Position</th><th>Sentiment</th></tr></thead>
-      <tbody id="body-hanson"></tbody>
-    </table>
+    <table><thead><tr><th class="h-date"></th><th class="h-type"></th><th class="h-pol"></th><th class="h-sent"></th></tr></thead><tbody id="body-hanson"></tbody></table>
   </div>
-
-  <!-- ALBANESE -->
   <div class="panel" id="panel-albanese">
-    <table>
-      <thead><tr><th>Date</th><th>Policy type</th><th>Position</th><th>Sentiment</th></tr></thead>
-      <tbody id="body-albanese"></tbody>
-    </table>
+    <table><thead><tr><th class="h-date"></th><th class="h-type"></th><th class="h-pol"></th><th class="h-sent"></th></tr></thead><tbody id="body-albanese"></tbody></table>
   </div>
 
-  <p class="legend"><b>Public sentiment legend:</b> <span class="sent pos">Positive</span> the policy was broadly popular / well received by the public &nbsp;·&nbsp; <span class="sent neg">Negative</span> the policy was broadly unpopular / poorly received. Reception is a general assessment from polling and reporting and varies across the population.</p>
+  <p class="legend" id="legend"></p>
 </div>
 
-<footer>
-  Compiled June 2026 from public reporting and reference sources including Wikipedia, The Conversation, SBS News, One Nation's website and AustralianPolitics.com. Dates are approximate where a position was held over a period. "Sentiment" reflects broad public reception of the policy (from polling and reporting), not the politician's own stance or any endorsement.
-</footer>
+<footer id="footer"></footer>
 
 <script>
+const UI = {
+  en:{title:"Australian Politicians — Policy Tracker", sub:"Policy positions over each politician's career, newest first. Filter by policy type; sentiment shows how the public broadly received the policy.", langLabel:"Language", filterLabel:"Policy type", allTypes:"All types", unit:"positions", colDate:"Date", colType:"Policy type", colPol:"Position", colSent:"Public sentiment", sentPos:"Positive", sentNeg:"Negative", legTitle:"Public sentiment legend:", legPos:"broadly popular / well received by the public", legNeg:"broadly unpopular / poorly received", legNote:"Reception is a general assessment from polling and reporting and varies across the population.", footer:"Compiled June 2026 from public reporting and reference sources. Dates are approximate; “sentiment” reflects broad public reception, not an endorsement.", ongoing:"Ongoing"},
+  zhs:{title:"澳大利亚政治人物 — 政策追踪", sub:"按时间倒序列出每位政治人物在其政治生涯中的政策立场。可按政策类型筛选；反响一栏显示公众对该政策的总体反响。", langLabel:"语言", filterLabel:"政策类型", allTypes:"所有类型", unit:"项立场", colDate:"日期", colType:"政策类型", colPol:"立场", colSent:"公众反响", sentPos:"正面", sentNeg:"负面", legTitle:"公众反响说明：", legPos:"公众普遍欢迎／反响良好", legNeg:"公众普遍不满／反响不佳", legNote:"反响为根据民调与报道作出的总体评估，不同人群之间存在差异。", footer:"于2026年6月根据公开报道及参考资料整理。日期为大致时间；“反响”反映公众的总体反应，并非认可。", ongoing:"持续"},
+  zht:{title:"澳洲政治人物 — 政策追蹤", sub:"按時間倒序列出每位政治人物在其政治生涯中的政策立場。可按政策類型篩選；反響一欄顯示公眾對該政策的整體反響。", langLabel:"語言", filterLabel:"政策類型", allTypes:"所有類型", unit:"項立場", colDate:"日期", colType:"政策類型", colPol:"立場", colSent:"公眾反響", sentPos:"正面", sentNeg:"負面", legTitle:"公眾反響說明：", legPos:"公眾普遍歡迎／反響良好", legNeg:"公眾普遍不滿／反響不佳", legNote:"反響為根據民調與報導作出的整體評估，不同人群之間存在差異。", footer:"於2026年6月根據公開報導及參考資料整理。日期為大致時間；「反響」反映公眾的整體反應，並非認可。", ongoing:"持續"},
+  ar:{title:"السياسيون الأستراليون — متتبّع السياسات", sub:"مواقف السياسات عبر مسيرة كل سياسي، الأحدث أولاً. صفِّ حسب نوع السياسة؛ ويُظهر عمود المشاعر كيف تلقّى الجمهور السياسة بشكل عام.", langLabel:"اللغة", filterLabel:"نوع السياسة", allTypes:"جميع الأنواع", unit:"موقفاً", colDate:"التاريخ", colType:"نوع السياسة", colPol:"الموقف", colSent:"مشاعر الجمهور", sentPos:"إيجابي", sentNeg:"سلبي", legTitle:"دليل مشاعر الجمهور:", legPos:"حظيت بقبول واسع / استقبال جيد من الجمهور", legNeg:"لم تحظَ بقبول واسع / استقبال سيئ", legNote:"الاستقبال تقدير عام مبني على استطلاعات الرأي والتقارير ويختلف بين فئات السكان.", footer:"جُمعت في يونيو 2026 من تقارير عامة ومصادر مرجعية. التواريخ تقريبية؛ وتعكس «المشاعر» الاستقبال العام للجمهور وليست تأييداً.", ongoing:"مستمر"},
+  vi:{title:"Các chính trị gia Úc — Theo dõi chính sách", sub:"Lập trường chính sách trong suốt sự nghiệp của mỗi chính trị gia, mới nhất trước. Lọc theo loại chính sách; cột cảm nhận cho thấy công chúng đón nhận chính sách như thế nào.", langLabel:"Ngôn ngữ", filterLabel:"Loại chính sách", allTypes:"Tất cả các loại", unit:"lập trường", colDate:"Ngày", colType:"Loại chính sách", colPol:"Lập trường", colSent:"Cảm nhận công chúng", sentPos:"Tích cực", sentNeg:"Tiêu cực", legTitle:"Chú thích cảm nhận công chúng:", legPos:"được công chúng ủng hộ rộng rãi / đón nhận tốt", legNeg:"không được ủng hộ / đón nhận kém", legNote:"Mức đón nhận là đánh giá chung từ thăm dò và báo chí, và khác nhau giữa các nhóm dân cư.", footer:"Tổng hợp tháng 6/2026 từ các nguồn tin công khai và tài liệu tham khảo. Ngày tháng là gần đúng; “cảm nhận” phản ánh sự đón nhận chung của công chúng, không phải sự tán thành.", ongoing:"Đang tiếp diễn"},
+  pa:{title:"ਆਸਟ੍ਰੇਲੀਆਈ ਸਿਆਸਤਦਾਨ — ਨੀਤੀ ਟ੍ਰੈਕਰ", sub:"ਹਰ ਸਿਆਸਤਦਾਨ ਦੇ ਕਰੀਅਰ ਦੌਰਾਨ ਨੀਤੀ ਪੱਖ, ਨਵੀਨਤਮ ਪਹਿਲਾਂ। ਨੀਤੀ ਕਿਸਮ ਅਨੁਸਾਰ ਫਿਲਟਰ ਕਰੋ; ਭਾਵਨਾ ਕਾਲਮ ਦਿਖਾਉਂਦਾ ਹੈ ਕਿ ਲੋਕਾਂ ਨੇ ਨੀਤੀ ਨੂੰ ਆਮ ਤੌਰ 'ਤੇ ਕਿਵੇਂ ਅਪਣਾਇਆ।", langLabel:"ਭਾਸ਼ਾ", filterLabel:"ਨੀਤੀ ਕਿਸਮ", allTypes:"ਸਾਰੀਆਂ ਕਿਸਮਾਂ", unit:"ਪੱਖ", colDate:"ਤਾਰੀਖ", colType:"ਨੀਤੀ ਕਿਸਮ", colPol:"ਪੱਖ", colSent:"ਲੋਕ ਭਾਵਨਾ", sentPos:"ਸਕਾਰਾਤਮਕ", sentNeg:"ਨਕਾਰਾਤਮਕ", legTitle:"ਲੋਕ ਭਾਵਨਾ ਵੇਰਵਾ:", legPos:"ਲੋਕਾਂ ਵੱਲੋਂ ਵਿਆਪਕ ਤੌਰ 'ਤੇ ਪਸੰਦ / ਚੰਗਾ ਹੁੰਗਾਰਾ", legNeg:"ਵਿਆਪਕ ਤੌਰ 'ਤੇ ਨਾਪਸੰਦ / ਮਾੜਾ ਹੁੰਗਾਰਾ", legNote:"ਹੁੰਗਾਰਾ ਸਰਵੇਖਣਾਂ ਅਤੇ ਰਿਪੋਰਟਾਂ 'ਤੇ ਆਧਾਰਿਤ ਆਮ ਮੁਲਾਂਕਣ ਹੈ ਅਤੇ ਲੋਕਾਂ ਵਿੱਚ ਵੱਖਰਾ ਹੁੰਦਾ ਹੈ।", footer:"ਜੂਨ 2026 ਵਿੱਚ ਜਨਤਕ ਰਿਪੋਰਟਾਂ ਅਤੇ ਹਵਾਲਾ ਸਰੋਤਾਂ ਤੋਂ ਤਿਆਰ ਕੀਤਾ। ਤਾਰੀਖਾਂ ਲਗਭਗ ਹਨ; 'ਭਾਵਨਾ' ਲੋਕਾਂ ਦੇ ਆਮ ਹੁੰਗਾਰੇ ਨੂੰ ਦਰਸਾਉਂਦੀ ਹੈ, ਸਮਰਥਨ ਨਹੀਂ।", ongoing:"ਜਾਰੀ"}
+};
+
+const TABS = {
+  hanson:{en:"Pauline Hanson", zhs:"宝琳·汉森", zht:"寶琳·漢森", ar:"بولين هانسون", vi:"Pauline Hanson", pa:"ਪੌਲੀਨ ਹੈਨਸਨ"},
+  albanese:{en:"Anthony Albanese", zhs:"安东尼·阿尔巴尼斯", zht:"安東尼·阿爾巴尼斯", ar:"أنتوني ألبانيزي", vi:"Anthony Albanese", pa:"ਐਂਥਨੀ ਅਲਬਾਨੀਜ਼"}
+};
+
+const TYPES = {
+  "Immigration":{en:"Immigration",zhs:"移民",zht:"移民",ar:"الهجرة",vi:"Nhập cư",pa:"ਇਮੀਗ੍ਰੇਸ਼ਨ"},
+  "Tax":{en:"Tax",zhs:"税收",zht:"稅收",ar:"الضرائب",vi:"Thuế",pa:"ਟੈਕਸ"},
+  "Climate Change":{en:"Climate Change",zhs:"气候变化",zht:"氣候變化",ar:"تغير المناخ",vi:"Biến đổi khí hậu",pa:"ਜਲਵਾਯੂ ਤਬਦੀਲੀ"},
+  "Government Spending":{en:"Government Spending",zhs:"政府开支",zht:"政府開支",ar:"الإنفاق الحكومي",vi:"Chi tiêu chính phủ",pa:"ਸਰਕਾਰੀ ਖਰਚ"},
+  "Gun Control":{en:"Gun Control",zhs:"枪支管制",zht:"槍械管制",ar:"ضبط الأسلحة",vi:"Kiểm soát súng",pa:"ਬੰਦੂਕ ਕੰਟਰੋਲ"},
+  "Health (COVID)":{en:"Health (COVID)",zhs:"健康（新冠）",zht:"健康（新冠）",ar:"الصحة (كوفيد)",vi:"Y tế (COVID)",pa:"ਸਿਹਤ (ਕੋਵਿਡ)"},
+  "Islam / Civil Liberties":{en:"Islam / Civil Liberties",zhs:"伊斯兰／公民自由",zht:"伊斯蘭／公民自由",ar:"الإسلام / الحريات المدنية",vi:"Hồi giáo / Quyền tự do dân sự",pa:"ਇਸਲਾਮ / ਨਾਗਰਿਕ ਆਜ਼ਾਦੀ"},
+  "Abortion":{en:"Abortion",zhs:"堕胎",zht:"墮胎",ar:"الإجهاض",vi:"Phá thai",pa:"ਗਰਭਪਾਤ"},
+  "Indigenous Affairs":{en:"Indigenous Affairs",zhs:"原住民事务",zht:"原住民事務",ar:"شؤون السكان الأصليين",vi:"Vấn đề thổ dân",pa:"ਮੂਲ ਨਿਵਾਸੀ ਮਾਮਲੇ"},
+  "Trade":{en:"Trade",zhs:"贸易",zht:"貿易",ar:"التجارة",vi:"Thương mại",pa:"ਵਪਾਰ"},
+  "Privatisation":{en:"Privatisation",zhs:"私有化",zht:"私有化",ar:"الخصخصة",vi:"Tư nhân hóa",pa:"ਨਿੱਜੀਕਰਨ"},
+  "Education":{en:"Education",zhs:"教育",zht:"教育",ar:"التعليم",vi:"Giáo dục",pa:"ਸਿੱਖਿਆ"},
+  "Health":{en:"Health",zhs:"医疗",zht:"醫療",ar:"الصحة",vi:"Y tế",pa:"ਸਿਹਤ"},
+  "Cost of Living":{en:"Cost of Living",zhs:"生活成本",zht:"生活成本",ar:"تكلفة المعيشة",vi:"Chi phí sinh hoạt",pa:"ਜੀਵਨ ਲਾਗਤ"},
+  "Housing":{en:"Housing",zhs:"住房",zht:"住房",ar:"الإسكان",vi:"Nhà ở",pa:"ਰਿਹਾਇਸ਼"},
+  "Defence":{en:"Defence",zhs:"国防",zht:"國防",ar:"الدفاع",vi:"Quốc phòng",pa:"ਰੱਖਿਆ"},
+  "Industrial Relations":{en:"Industrial Relations",zhs:"劳资关系",zht:"勞資關係",ar:"العلاقات العمالية",vi:"Quan hệ lao động",pa:"ਉਦਯੋਗਿਕ ਸਬੰਧ"},
+  "Integrity":{en:"Integrity",zhs:"廉政",zht:"廉政",ar:"النزاهة",vi:"Liêm chính",pa:"ਇਮਾਨਦਾਰੀ"},
+  "Family / Welfare":{en:"Family / Welfare",zhs:"家庭／福利",zht:"家庭／福利",ar:"الأسرة / الرعاية",vi:"Gia đình / Phúc lợi",pa:"ਪਰਿਵਾਰ / ਭਲਾਈ"},
+  "Marriage Equality":{en:"Marriage Equality",zhs:"婚姻平权",zht:"婚姻平權",ar:"المساواة في الزواج",vi:"Bình đẳng hôn nhân",pa:"ਵਿਆਹ ਸਮਾਨਤਾ"},
+  "Environment":{en:"Environment",zhs:"环境",zht:"環境",ar:"البيئة",vi:"Môi trường",pa:"ਵਾਤਾਵਰਣ"},
+  "Foreign Policy":{en:"Foreign Policy",zhs:"外交政策",zht:"外交政策",ar:"السياسة الخارجية",vi:"Chính sách đối ngoại",pa:"ਵਿਦੇਸ਼ ਨੀਤੀ"},
+  "Republic":{en:"Republic",zhs:"共和制",zht:"共和制",ar:"الجمهورية",vi:"Chế độ cộng hòa",pa:"ਗਣਰਾਜ"}
+};
+
 const DATA = {
   hanson: [
-    {date:"2026-06", sort:"2026-06-17", type:"Climate Change", pos:"Called climate change a \"hoax\" and called for a ban on wind-farm energy and a halt to renewable expansion (National Press Club address).", sent:"neg"},
-    {date:"2026", sort:"2026-05-01", type:"Immigration", pos:"Cap visas at 130,000 per year, cutting net immigration by ~570,000 to ease housing and wage pressure.", sent:"pos"},
-    {date:"2026", sort:"2026-05-02", type:"Immigration", pos:"Deport 75,000 illegal migrants and end student/skilled-visa \"loopholes\".", sent:"pos"},
-    {date:"2026", sort:"2026-05-03", type:"Immigration", pos:"Introduce an 8-year waiting period for citizenship and welfare for new arrivals.", sent:"neg"},
-    {date:"2026", sort:"2026-05-04", type:"Immigration", pos:"Withdraw Australia from the UN Refugee Convention; refuse entry from nations deemed to foster extremism.", sent:"neg"},
-    {date:"2026", sort:"2026-05-05", type:"Tax", pos:"Levy royalties on gas producers and introduce income-splitting for families to cut their tax burden.", sent:"pos"},
-    {date:"2026", sort:"2026-05-06", type:"Government Spending", pos:"Slash $90bn in spending: abolish the National Indigenous Australians Agency and TGA; cut arts, multicultural programs and foreign aid.", sent:"neg"},
-    {date:"2025", sort:"2025-09-01", type:"Gun Control", pos:"Opposed government measures to restrict high-powered firearms following the 2025 Bondi Beach shooting.", sent:"neg"},
-    {date:"2021–22", sort:"2021-09-01", type:"Health (COVID)", pos:"Opposed COVID-19 vaccine mandates; called for a Royal Commission into governments' pandemic management.", sent:"neg"},
-    {date:"2017-08", sort:"2017-08-17", type:"Islam / Civil Liberties", pos:"Wore a burqa into Senate Question Time and called for the burqa to be banned in public.", sent:"neg"},
-    {date:"Ongoing", sort:"2016-07-01", type:"Abortion", pos:"Broadly anti-abortion and self-described \"pro-life\", particularly on late-term abortion.", sent:"neg"},
-    {date:"1996-09", sort:"1996-09-10", type:"Immigration", pos:"Maiden speech: warned Australia was \"in danger of being swamped by Asians\" and urged a drastic immigration cut.", sent:"neg"},
-    {date:"1996-09", sort:"1996-09-09", type:"Indigenous Affairs", pos:"Criticised ATSIC and argued Aboriginal Australians received more benefits than non-Aboriginals.", sent:"neg"},
-    {date:"1996-09", sort:"1996-09-08", type:"Trade", pos:"Called for a return to high-tariff protectionism and criticised \"economic rationalism\".", sent:"pos"},
-    {date:"1996-09", sort:"1996-09-07", type:"Privatisation", pos:"Opposed the privatisation of Qantas and other national enterprises.", sent:"pos"}
+    {date:"2026-06", ongoing:false, sort:"2026-06-17", type:"Climate Change", sent:"neg", pos:{en:"Called climate change a “hoax” and called for a ban on wind-farm energy and a halt to renewable expansion.", zhs:"称气候变化是“骗局”，要求禁止风电并停止可再生能源扩张。", zht:"稱氣候變化是「騙局」，要求禁止風電並停止可再生能源擴張。", ar:"وصفت تغير المناخ بأنه «خدعة» ودعت إلى حظر طاقة الرياح ووقف التوسع في الطاقة المتجددة.", vi:"Gọi biến đổi khí hậu là “trò lừa”, kêu gọi cấm điện gió và ngừng mở rộng năng lượng tái tạo.", pa:"ਜਲਵਾਯੂ ਤਬਦੀਲੀ ਨੂੰ “ਧੋਖਾ” ਕਿਹਾ ਅਤੇ ਪੌਣ-ਊਰਜਾ 'ਤੇ ਪਾਬੰਦੀ ਤੇ ਨਵਿਆਉਣਯੋਗ ਊਰਜਾ ਦੇ ਵਾਧੇ ਨੂੰ ਰੋਕਣ ਦੀ ਮੰਗ ਕੀਤੀ।"}},
+    {date:"2026", ongoing:false, sort:"2026-05-01", type:"Immigration", sent:"pos", pos:{en:"Cap visas at 130,000/yr, cutting net immigration by ~570,000 to ease housing and wage pressure.", zhs:"将签证上限定为每年13万，使净移民减少约57万，以缓解住房和工资压力。", zht:"將簽證上限定為每年13萬，使淨移民減少約57萬，以紓緩住房和工資壓力。", ar:"تحديد سقف التأشيرات بـ130,000 سنوياً، لخفض صافي الهجرة بنحو 570,000 لتخفيف ضغط الإسكان والأجور.", vi:"Giới hạn thị thực ở 130.000/năm, giảm nhập cư ròng khoảng 570.000 để giảm áp lực nhà ở và tiền lương.", pa:"ਵੀਜ਼ਿਆਂ ਦੀ ਹੱਦ 130,000 ਪ੍ਰਤੀ ਸਾਲ, ਸ਼ੁੱਧ ਇਮੀਗ੍ਰੇਸ਼ਨ ਨੂੰ ~570,000 ਘਟਾ ਕੇ ਰਿਹਾਇਸ਼ ਤੇ ਤਨਖਾਹ ਦਬਾਅ ਘਟਾਉਣਾ।"}},
+    {date:"2026", ongoing:false, sort:"2026-05-02", type:"Immigration", sent:"pos", pos:{en:"Deport 75,000 illegal migrants and end student/skilled-visa “loopholes”.", zhs:"驱逐7.5万名非法移民，并堵住学生／技术签证“漏洞”。", zht:"驅逐7.5萬名非法移民，並堵住學生／技術簽證「漏洞」。", ar:"ترحيل 75,000 مهاجر غير شرعي وإنهاء «ثغرات» تأشيرات الطلاب والمهارات.", vi:"Trục xuất 75.000 người nhập cư bất hợp pháp và chấm dứt “kẽ hở” thị thực du học/tay nghề.", pa:"75,000 ਗੈਰ-ਕਾਨੂੰਨੀ ਪਰਵਾਸੀਆਂ ਨੂੰ ਕੱਢਣਾ ਅਤੇ ਵਿਦਿਆਰਥੀ/ਹੁਨਰ ਵੀਜ਼ਾ “ਖਾਮੀਆਂ” ਖਤਮ ਕਰਨੀਆਂ।"}},
+    {date:"2026", ongoing:false, sort:"2026-05-03", type:"Immigration", sent:"neg", pos:{en:"Introduce an 8-year waiting period for citizenship and welfare for new arrivals.", zhs:"对新移民实行8年的入籍和福利等待期。", zht:"對新移民實行8年的入籍和福利等待期。", ar:"فرض فترة انتظار 8 سنوات للحصول على الجنسية والرعاية للقادمين الجدد.", vi:"Áp dụng thời gian chờ 8 năm để nhập tịch và hưởng phúc lợi đối với người mới đến.", pa:"ਨਵੇਂ ਆਉਣ ਵਾਲਿਆਂ ਲਈ ਨਾਗਰਿਕਤਾ ਤੇ ਭਲਾਈ ਵਾਸਤੇ 8 ਸਾਲ ਦੀ ਉਡੀਕ ਮਿਆਦ।"}},
+    {date:"2026", ongoing:false, sort:"2026-05-04", type:"Immigration", sent:"neg", pos:{en:"Withdraw Australia from the UN Refugee Convention; refuse entry from nations deemed to foster extremism.", zhs:"让澳大利亚退出《联合国难民公约》；拒绝被视为助长极端主义的国家的入境者。", zht:"讓澳洲退出《聯合國難民公約》；拒絕被視為助長極端主義的國家的入境者。", ar:"انسحاب أستراليا من اتفاقية اللاجئين للأمم المتحدة؛ ومنع الدخول من دول تُعتبر داعمة للتطرف.", vi:"Rút Úc khỏi Công ước Tị nạn Liên Hợp Quốc; từ chối nhập cảnh từ các nước bị cho là nuôi dưỡng chủ nghĩa cực đoan.", pa:"ਆਸਟ੍ਰੇਲੀਆ ਨੂੰ ਯੂਐਨ ਸ਼ਰਨਾਰਥੀ ਸੰਧੀ ਤੋਂ ਬਾਹਰ ਕਰਨਾ; ਕੱਟੜਵਾਦ ਨੂੰ ਉਤਸ਼ਾਹਿਤ ਕਰਨ ਵਾਲੇ ਦੇਸ਼ਾਂ ਤੋਂ ਦਾਖਲਾ ਮਨ੍ਹਾ।"}},
+    {date:"2026", ongoing:false, sort:"2026-05-05", type:"Tax", sent:"pos", pos:{en:"Levy royalties on gas producers and introduce income-splitting for families to cut their tax.", zhs:"向天然气生产商征收资源税，并推行家庭收入分摊以减税。", zht:"向天然氣生產商徵收資源稅，並推行家庭收入分攤以減稅。", ar:"فرض إتاوات على منتجي الغاز وإدخال تقاسم الدخل للأسر لخفض ضرائبها.", vi:"Thu phí khai thác đối với nhà sản xuất khí đốt và áp dụng chia thu nhập cho gia đình để giảm thuế.", pa:"ਗੈਸ ਉਤਪਾਦਕਾਂ 'ਤੇ ਰਾਇਲਟੀ ਲਾਉਣਾ ਅਤੇ ਪਰਿਵਾਰਾਂ ਲਈ ਆਮਦਨ-ਵੰਡ ਰਾਹੀਂ ਟੈਕਸ ਘਟਾਉਣਾ।"}},
+    {date:"2026", ongoing:false, sort:"2026-05-06", type:"Government Spending", sent:"neg", pos:{en:"Slash $90bn in spending: abolish the National Indigenous Australians Agency and TGA; cut arts and foreign aid.", zhs:"削减900亿澳元开支：撤销国家原住民事务署和TGA；削减艺术和对外援助经费。", zht:"削減900億澳元開支：撤銷國家原住民事務署和TGA；削減藝術和對外援助經費。", ar:"خفض الإنفاق بمقدار 90 مليار دولار: إلغاء الوكالة الوطنية للسكان الأصليين وهيئة TGA؛ وخفض الفنون والمساعدات الخارجية.", vi:"Cắt 90 tỷ đô chi tiêu: bãi bỏ Cơ quan Thổ dân Quốc gia và TGA; cắt nghệ thuật và viện trợ nước ngoài.", pa:"$90 ਬਿਲੀਅਨ ਖਰਚ ਘਟਾਉਣਾ: ਨੈਸ਼ਨਲ ਇੰਡੀਜਨਸ ਏਜੰਸੀ ਤੇ TGA ਖਤਮ; ਕਲਾ ਤੇ ਵਿਦੇਸ਼ੀ ਸਹਾਇਤਾ 'ਚ ਕਟੌਤੀ।"}},
+    {date:"2025", ongoing:false, sort:"2025-09-01", type:"Gun Control", sent:"neg", pos:{en:"Opposed government measures to restrict high-powered firearms after the 2025 Bondi Beach shooting.", zhs:"反对政府在2025年邦迪海滩枪击案后限制高性能枪支的措施。", zht:"反對政府在2025年邦迪海灘槍擊案後限制高性能槍械的措施。", ar:"عارضت إجراءات الحكومة لتقييد الأسلحة عالية القوة بعد إطلاق النار في شاطئ بوندي 2025.", vi:"Phản đối các biện pháp của chính phủ nhằm hạn chế súng mạnh sau vụ xả súng ở bãi biển Bondi 2025.", pa:"2025 ਬੌਂਡੀ ਬੀਚ ਗੋਲੀਬਾਰੀ ਤੋਂ ਬਾਅਦ ਉੱਚ-ਸ਼ਕਤੀ ਬੰਦੂਕਾਂ 'ਤੇ ਰੋਕ ਦੇ ਸਰਕਾਰੀ ਕਦਮਾਂ ਦਾ ਵਿਰੋਧ।"}},
+    {date:"2021–22", ongoing:false, sort:"2021-09-01", type:"Health (COVID)", sent:"neg", pos:{en:"Opposed COVID-19 vaccine mandates; called for a Royal Commission into governments' pandemic management.", zhs:"反对新冠疫苗强制令；要求就政府的疫情管理成立皇家委员会调查。", zht:"反對新冠疫苗強制令；要求就政府的疫情管理成立皇家委員會調查。", ar:"عارضت إلزامية لقاح كوفيد-19؛ ودعت إلى لجنة ملكية للتحقيق في إدارة الحكومات للجائحة.", vi:"Phản đối bắt buộc tiêm vaccine COVID-19; kêu gọi lập Ủy ban Hoàng gia điều tra cách chính phủ xử lý đại dịch.", pa:"ਕੋਵਿਡ-19 ਟੀਕਾ ਲਾਜ਼ਮੀ ਦਾ ਵਿਰੋਧ; ਸਰਕਾਰਾਂ ਦੇ ਮਹਾਂਮਾਰੀ ਪ੍ਰਬੰਧਨ 'ਤੇ ਰਾਇਲ ਕਮਿਸ਼ਨ ਦੀ ਮੰਗ।"}},
+    {date:"2017-08", ongoing:false, sort:"2017-08-17", type:"Islam / Civil Liberties", sent:"neg", pos:{en:"Wore a burqa into Senate Question Time and called for the burqa to be banned in public.", zhs:"穿着布卡进入参议院质询时间，并呼吁在公共场所禁止布卡。", zht:"穿著布卡進入參議院質詢時間，並呼籲在公共場所禁止布卡。", ar:"ارتدت البرقع في جلسة أسئلة مجلس الشيوخ ودعت إلى حظره في الأماكن العامة.", vi:"Mặc burqa vào phiên chất vấn Thượng viện và kêu gọi cấm burqa nơi công cộng.", pa:"ਸੈਨੇਟ ਸਵਾਲ-ਜਵਾਬ ਸਮੇਂ ਬੁਰਕਾ ਪਾਇਆ ਅਤੇ ਜਨਤਕ ਥਾਵਾਂ 'ਤੇ ਬੁਰਕੇ 'ਤੇ ਪਾਬੰਦੀ ਦੀ ਮੰਗ ਕੀਤੀ।"}},
+    {date:"Ongoing", ongoing:true, sort:"2016-07-01", type:"Abortion", sent:"neg", pos:{en:"Broadly anti-abortion and self-described “pro-life”, particularly on late-term abortion.", zhs:"总体反对堕胎，自称“维护生命”，尤其反对晚期堕胎。", zht:"整體反對墮胎，自稱「維護生命」，尤其反對晚期墮胎。", ar:"تعارض الإجهاض عموماً وتصف نفسها بأنها «مؤيدة للحياة»، خاصة الإجهاض المتأخر.", vi:"Nhìn chung phản đối phá thai và tự nhận là “ủng hộ sự sống”, đặc biệt là phá thai muộn.", pa:"ਆਮ ਤੌਰ 'ਤੇ ਗਰਭਪਾਤ-ਵਿਰੋਧੀ ਅਤੇ ਖੁਦ ਨੂੰ “ਜੀਵਨ-ਪੱਖੀ” ਦੱਸਦੀ, ਖਾਸਕਰ ਦੇਰ-ਮਿਆਦ ਗਰਭਪਾਤ 'ਤੇ।"}},
+    {date:"1996-09", ongoing:false, sort:"1996-09-10", type:"Immigration", sent:"neg", pos:{en:"Maiden speech: warned Australia was “in danger of being swamped by Asians” and urged a drastic immigration cut.", zhs:"首次演讲：警告澳大利亚“有被亚洲人淹没的危险”，并力主大幅削减移民。", zht:"首次演講：警告澳洲「有被亞洲人淹沒的危險」，並力主大幅削減移民。", ar:"خطابها الأول: حذّرت من أن أستراليا «معرضة لخطر أن يغمرها الآسيويون» ودعت إلى خفض حاد للهجرة.", vi:"Bài phát biểu đầu tiên: cảnh báo Úc “có nguy cơ bị người châu Á tràn ngập” và kêu gọi cắt giảm mạnh nhập cư.", pa:"ਪਹਿਲਾ ਭਾਸ਼ਣ: ਚੇਤਾਵਨੀ ਕਿ ਆਸਟ੍ਰੇਲੀਆ “ਏਸ਼ੀਆਈ ਲੋਕਾਂ ਨਾਲ ਭਰ ਜਾਣ ਦੇ ਖਤਰੇ” ਵਿੱਚ ਹੈ ਅਤੇ ਇਮੀਗ੍ਰੇਸ਼ਨ 'ਚ ਭਾਰੀ ਕਟੌਤੀ ਦੀ ਮੰਗ।"}},
+    {date:"1996-09", ongoing:false, sort:"1996-09-09", type:"Indigenous Affairs", sent:"neg", pos:{en:"Criticised ATSIC and argued Aboriginal Australians received more benefits than non-Aboriginals.", zhs:"批评ATSIC，声称原住民比非原住民获得更多福利。", zht:"批評ATSIC，聲稱原住民比非原住民獲得更多福利。", ar:"انتقدت هيئة ATSIC وزعمت أن السكان الأصليين يحصلون على مزايا أكثر من غيرهم.", vi:"Chỉ trích ATSIC và cho rằng người thổ dân nhận nhiều phúc lợi hơn người không phải thổ dân.", pa:"ATSIC ਦੀ ਆਲੋਚਨਾ ਕੀਤੀ ਅਤੇ ਕਿਹਾ ਕਿ ਮੂਲ ਨਿਵਾਸੀਆਂ ਨੂੰ ਗੈਰ-ਮੂਲ ਨਿਵਾਸੀਆਂ ਨਾਲੋਂ ਵੱਧ ਲਾਭ ਮਿਲਦੇ ਹਨ।"}},
+    {date:"1996-09", ongoing:false, sort:"1996-09-08", type:"Trade", sent:"pos", pos:{en:"Called for a return to high-tariff protectionism and criticised “economic rationalism”.", zhs:"呼吁恢复高关税保护主义，并批评“经济理性主义”。", zht:"呼籲恢復高關稅保護主義，並批評「經濟理性主義」。", ar:"دعت إلى العودة إلى الحمائية عالية التعريفات وانتقدت «العقلانية الاقتصادية».", vi:"Kêu gọi quay lại chủ nghĩa bảo hộ thuế quan cao và chỉ trích “chủ nghĩa duy lý kinh tế”.", pa:"ਉੱਚ-ਟੈਰਿਫ ਸੁਰੱਖਿਆਵਾਦ ਵੱਲ ਮੁੜਨ ਦੀ ਮੰਗ ਅਤੇ “ਆਰਥਿਕ ਤਰਕਸ਼ੀਲਤਾ” ਦੀ ਆਲੋਚਨਾ।"}},
+    {date:"1996-09", ongoing:false, sort:"1996-09-07", type:"Privatisation", sent:"pos", pos:{en:"Opposed the privatisation of Qantas and other national enterprises.", zhs:"反对将澳航等国有企业私有化。", zht:"反對將澳航等國有企業私有化。", ar:"عارضت خصخصة كانتاس وغيرها من المؤسسات الوطنية.", vi:"Phản đối tư nhân hóa Qantas và các doanh nghiệp quốc gia khác.", pa:"ਕੁਆਂਟਸ ਤੇ ਹੋਰ ਰਾਸ਼ਟਰੀ ਅਦਾਰਿਆਂ ਦੇ ਨਿੱਜੀਕਰਨ ਦਾ ਵਿਰੋਧ।"}}
   ],
   albanese: [
-    {date:"2025", sort:"2025-06-01", type:"Education", pos:"Wipe 20% of student (HECS) debt for ~3 million Australians and lift the repayment threshold to $67,000.", sent:"pos"},
-    {date:"2025", sort:"2025-05-20", type:"Health", pos:"Expand Medicare bulk-billing incentives, launch a 24-hour 1800MEDICARE telehealth line and add 50 urgent-care clinics.", sent:"pos"},
-    {date:"2025", sort:"2025-05-19", type:"Health", pos:"Cap most PBS prescriptions at $25 (down from $31.60).", sent:"pos"},
-    {date:"2025", sort:"2025-05-18", type:"Cost of Living", pos:"Provide an extra $150 in energy-bill relief to households and businesses.", sent:"pos"},
-    {date:"2025", sort:"2025-05-17", type:"Housing", pos:"Government-backed 5% deposits for first-home buyers; ~55,000 new low-income homes by 2030.", sent:"pos"},
-    {date:"2024-01", sort:"2024-01-25", type:"Tax", pos:"Restructured the Stage 3 tax cuts to give larger relief to earners under $200,000.", sent:"pos"},
-    {date:"2023-10", sort:"2023-10-14", type:"Indigenous Affairs", pos:"Championed the Indigenous Voice to Parliament constitutional referendum (rejected ~60% to 40%).", sent:"neg"},
-    {date:"2023-09", sort:"2023-09-13", type:"Housing", pos:"Passed the $10bn Housing Australia Future Fund to build 30,000 social/affordable homes.", sent:"pos"},
-    {date:"2023-08", sort:"2023-08-16", type:"Housing", pos:"Struck a National Cabinet deal to build 1.2 million homes over five years.", sent:"pos"},
-    {date:"2023-03", sort:"2023-03-13", type:"Defence", pos:"Launched the AUKUS pact to acquire $368bn of nuclear-powered submarines and defence materiel.", sent:"pos"},
-    {date:"2022", sort:"2022-12-01", type:"Industrial Relations", pos:"Overhauled industrial-relations laws and enacted the Future Made in Australia industrial policy.", sent:"pos"},
-    {date:"2022", sort:"2022-11-01", type:"Integrity", pos:"Established the National Anti-Corruption Commission.", sent:"pos"},
-    {date:"2022", sort:"2022-10-01", type:"Family / Welfare", pos:"Expanded access to paid parental leave and subsidised childcare.", sent:"pos"},
-    {date:"2022-09", sort:"2022-09-08", type:"Climate Change", pos:"Legislated a 43% emissions-reduction target by 2030 and an 82% renewable-electricity goal.", sent:"pos"},
-    {date:"2017", sort:"2017-12-07", type:"Marriage Equality", pos:"Voted to legalise same-sex marriage; had opposed holding a plebiscite.", sent:"pos"},
-    {date:"2012", sort:"2012-09-19", type:"Marriage Equality", pos:"Voted in favour of the (unsuccessful) Marriage Amendment Bill 2012.", sent:"pos"},
-    {date:"2004", sort:"2004-01-01", type:"Environment", pos:"As Shadow Minister for Environment, pushed climate and environmental protection up Labor's agenda.", sent:"pos"},
-    {date:"2003-03", sort:"2003-03-20", type:"Foreign Policy", pos:"Opposed the Iraq War, arguing it lacked a UN mandate and was an unjust invasion.", sent:"pos"},
-    {date:"Ongoing", sort:"1996-03-02", type:"Republic", pos:"A republican; supports replacing the constitutional monarchy with an Australian head of state.", sent:"neg"}
+    {date:"2025", ongoing:false, sort:"2025-06-01", type:"Education", sent:"pos", pos:{en:"Wipe 20% of student (HECS) debt for ~3 million Australians and lift the repayment threshold to $67,000.", zhs:"为约300万澳大利亚人减免20%的学生（HECS）贷款，并将还款起征点提高到6.7万澳元。", zht:"為約300萬澳洲人減免20%的學生（HECS）貸款，並將還款起徵點提高到6.7萬澳元。", ar:"شطب 20% من ديون الطلاب (HECS) لنحو 3 ملايين أسترالي ورفع عتبة السداد إلى 67,000 دولار.", vi:"Xóa 20% nợ sinh viên (HECS) cho khoảng 3 triệu người Úc và nâng ngưỡng hoàn trả lên 67.000 đô.", pa:"~30 ਲੱਖ ਆਸਟ੍ਰੇਲੀਅਨਾਂ ਲਈ 20% ਵਿਦਿਆਰਥੀ (HECS) ਕਰਜ਼ਾ ਮੁਆਫ ਅਤੇ ਮੋੜਨ ਦੀ ਹੱਦ $67,000 ਕੀਤੀ।"}},
+    {date:"2025", ongoing:false, sort:"2025-05-20", type:"Health", sent:"pos", pos:{en:"Expand Medicare bulk-billing incentives, launch a 24-hour 1800MEDICARE telehealth line and add 50 urgent-care clinics.", zhs:"扩大Medicare全额报销激励，推出24小时1800MEDICARE远程医疗热线，并增设50家急诊诊所。", zht:"擴大Medicare全額報銷激勵，推出24小時1800MEDICARE遠程醫療熱線，並增設50家急診診所。", ar:"توسيع حوافز الفوترة الكاملة في ميديكير، وإطلاق خط 1800MEDICARE للرعاية عن بُعد على مدار الساعة، وإضافة 50 عيادة رعاية عاجلة.", vi:"Mở rộng ưu đãi bulk-billing Medicare, ra mắt đường dây telehealth 1800MEDICARE 24 giờ và thêm 50 phòng khám cấp cứu.", pa:"Medicare ਬਲਕ-ਬਿਲਿੰਗ ਪ੍ਰੋਤਸਾਹਨ ਵਧਾਉਣਾ, 24-ਘੰਟੇ 1800MEDICARE ਟੈਲੀਹੈਲਥ ਲਾਈਨ ਸ਼ੁਰੂ, ਅਤੇ 50 ਅਰਜੈਂਟ-ਕੇਅਰ ਕਲੀਨਿਕ।"}},
+    {date:"2025", ongoing:false, sort:"2025-05-19", type:"Health", sent:"pos", pos:{en:"Cap most PBS prescriptions at $25 (down from $31.60).", zhs:"将大多数PBS处方药费封顶在25澳元（原为31.60澳元）。", zht:"將大多數PBS處方藥費封頂在25澳元（原為31.60澳元）。", ar:"تحديد سقف معظم وصفات PBS بـ25 دولاراً (بدلاً من 31.60).", vi:"Giới hạn hầu hết đơn thuốc PBS ở 25 đô (giảm từ 31,60 đô).", pa:"ਜ਼ਿਆਦਾਤਰ PBS ਨੁਸਖੇ $25 'ਤੇ ਸੀਮਤ ($31.60 ਤੋਂ ਘਟਾ ਕੇ)।"}},
+    {date:"2025", ongoing:false, sort:"2025-05-18", type:"Cost of Living", sent:"pos", pos:{en:"Provide an extra $150 in energy-bill relief to households and businesses.", zhs:"向家庭和企业额外提供150澳元的电费补贴。", zht:"向家庭和企業額外提供150澳元的電費補貼。", ar:"تقديم 150 دولاراً إضافية لتخفيف فواتير الكهرباء للأسر والشركات.", vi:"Hỗ trợ thêm 150 đô tiền điện cho hộ gia đình và doanh nghiệp.", pa:"ਘਰਾਂ ਤੇ ਕਾਰੋਬਾਰਾਂ ਨੂੰ ਬਿਜਲੀ ਬਿੱਲ 'ਤੇ ਵਾਧੂ $150 ਰਾਹਤ।"}},
+    {date:"2025", ongoing:false, sort:"2025-05-17", type:"Housing", sent:"pos", pos:{en:"Government-backed 5% deposits for first-home buyers; ~55,000 new low-income homes by 2030.", zhs:"由政府担保为首次购房者提供5%首付；到2030年新建约5.5万套低收入住房。", zht:"由政府擔保為首次置業者提供5%首付；到2030年新建約5.5萬套低收入住房。", ar:"دفعات أولى بنسبة 5% مدعومة من الحكومة لمشتري المنازل لأول مرة؛ ونحو 55,000 منزل منخفض الدخل بحلول 2030.", vi:"Chính phủ bảo lãnh khoản đặt cọc 5% cho người mua nhà lần đầu; khoảng 55.000 nhà thu nhập thấp vào năm 2030.", pa:"ਪਹਿਲੀ ਵਾਰ ਘਰ ਖਰੀਦਣ ਵਾਲਿਆਂ ਲਈ ਸਰਕਾਰੀ-ਸਮਰਥਿਤ 5% ਡਿਪਾਜ਼ਿਟ; 2030 ਤੱਕ ~55,000 ਘੱਟ-ਆਮਦਨ ਘਰ।"}},
+    {date:"2024-01", ongoing:false, sort:"2024-01-25", type:"Tax", sent:"pos", pos:{en:"Restructured the Stage 3 tax cuts to give larger relief to earners under $200,000.", zhs:"重组第三阶段减税方案，让年收入20万澳元以下者获得更大减免。", zht:"重組第三階段減稅方案，讓年收入20萬澳元以下者獲得更大減免。", ar:"إعادة هيكلة تخفيضات المرحلة الثالثة الضريبية لمنح إعفاء أكبر لمن يكسبون أقل من 200,000 دولار.", vi:"Tái cơ cấu cắt giảm thuế Giai đoạn 3 để giảm nhiều hơn cho người thu nhập dưới 200.000 đô.", pa:"ਸਟੇਜ 3 ਟੈਕਸ ਕਟੌਤੀਆਂ ਨੂੰ ਮੁੜ-ਢਾਂਚਾ, $200,000 ਤੋਂ ਘੱਟ ਕਮਾਉਣ ਵਾਲਿਆਂ ਨੂੰ ਵੱਧ ਰਾਹਤ।"}},
+    {date:"2023-10", ongoing:false, sort:"2023-10-14", type:"Indigenous Affairs", sent:"neg", pos:{en:"Championed the Indigenous Voice to Parliament constitutional referendum (rejected ~60% to 40%).", zhs:"推动原住民“国会之声”宪法公投（以约60%对40%被否决）。", zht:"推動原住民「國會之聲」憲法公投（以約60%對40%被否決）。", ar:"تبنّى استفتاء «صوت السكان الأصليين في البرلمان» الدستوري (رُفض بنحو 60% مقابل 40%).", vi:"Vận động trưng cầu dân ý sửa hiến pháp về “Tiếng nói Thổ dân tại Quốc hội” (bị bác ~60% so với 40%).", pa:"ਮੂਲ ਨਿਵਾਸੀ “ਵੌਇਸ ਟੂ ਪਾਰਲੀਮੈਂਟ” ਸੰਵਿਧਾਨਕ ਜਨਮਤ (~60% ਬਨਾਮ 40% ਨਾਲ ਰੱਦ)।"}},
+    {date:"2023-09", ongoing:false, sort:"2023-09-13", type:"Housing", sent:"pos", pos:{en:"Passed the $10bn Housing Australia Future Fund to build 30,000 social/affordable homes.", zhs:"通过100亿澳元的“澳大利亚住房未来基金”，兴建3万套社会及可负担住房。", zht:"通過100億澳元的「澳洲住房未來基金」，興建3萬套社會及可負擔住房。", ar:"إقرار صندوق مستقبل الإسكان الأسترالي بقيمة 10 مليارات دولار لبناء 30,000 منزل اجتماعي/ميسور.", vi:"Thông qua Quỹ Tương lai Nhà ở Úc 10 tỷ đô để xây 30.000 nhà xã hội/giá rẻ.", pa:"$10 ਬਿਲੀਅਨ ਹਾਊਸਿੰਗ ਆਸਟ੍ਰੇਲੀਆ ਫਿਊਚਰ ਫੰਡ ਪਾਸ ਕਰ ਕੇ 30,000 ਸਮਾਜਿਕ/ਕਿਫਾਇਤੀ ਘਰ।"}},
+    {date:"2023-08", ongoing:false, sort:"2023-08-16", type:"Housing", sent:"pos", pos:{en:"Struck a National Cabinet deal to build 1.2 million homes over five years.", zhs:"与国家内阁达成协议，五年内兴建120万套住房。", zht:"與國家內閣達成協議，五年內興建120萬套住房。", ar:"إبرام اتفاق مع مجلس الوزراء الوطني لبناء 1.2 مليون منزل خلال خمس سنوات.", vi:"Đạt thỏa thuận Nội các Quốc gia xây 1,2 triệu nhà trong năm năm.", pa:"ਨੈਸ਼ਨਲ ਕੈਬਨਿਟ ਨਾਲ ਪੰਜ ਸਾਲਾਂ 'ਚ 12 ਲੱਖ ਘਰ ਬਣਾਉਣ ਦਾ ਸਮਝੌਤਾ।"}},
+    {date:"2023-03", ongoing:false, sort:"2023-03-13", type:"Defence", sent:"pos", pos:{en:"Launched the AUKUS pact to acquire $368bn of nuclear-powered submarines and defence materiel.", zhs:"启动AUKUS协议，采购价值3680亿澳元的核动力潜艇及国防装备。", zht:"啟動AUKUS協議，採購價值3680億澳元的核動力潛艇及國防裝備。", ar:"إطلاق اتفاق أوكوس لشراء غواصات نووية وعتاد دفاعي بقيمة 368 مليار دولار.", vi:"Khởi động hiệp ước AUKUS để mua tàu ngầm hạt nhân và khí tài quốc phòng trị giá 368 tỷ đô.", pa:"AUKUS ਸਮਝੌਤਾ ਸ਼ੁਰੂ, $368 ਬਿਲੀਅਨ ਦੇ ਪਰਮਾਣੂ ਪਣਡੁੱਬੀਆਂ ਤੇ ਰੱਖਿਆ ਸਾਜ਼ੋ-ਸਾਮਾਨ ਦੀ ਖਰੀਦ।"}},
+    {date:"2022", ongoing:false, sort:"2022-12-01", type:"Industrial Relations", sent:"pos", pos:{en:"Overhauled industrial-relations laws and enacted the Future Made in Australia industrial policy.", zhs:"全面改革劳资关系法律，并推行“澳大利亚制造未来”产业政策。", zht:"全面改革勞資關係法律，並推行「澳洲製造未來」產業政策。", ar:"إصلاح شامل لقوانين العلاقات العمالية وسنّ سياسة «مستقبل يُصنع في أستراليا» الصناعية.", vi:"Cải tổ luật quan hệ lao động và ban hành chính sách công nghiệp “Tương lai Sản xuất tại Úc”.", pa:"ਉਦਯੋਗਿਕ ਸਬੰਧ ਕਾਨੂੰਨਾਂ 'ਚ ਸੁਧਾਰ ਅਤੇ “ਫਿਊਚਰ ਮੇਡ ਇਨ ਆਸਟ੍ਰੇਲੀਆ” ਉਦਯੋਗਿਕ ਨੀਤੀ।"}},
+    {date:"2022", ongoing:false, sort:"2022-11-01", type:"Integrity", sent:"pos", pos:{en:"Established the National Anti-Corruption Commission.", zhs:"设立国家反腐败委员会。", zht:"設立國家反腐敗委員會。", ar:"إنشاء اللجنة الوطنية لمكافحة الفساد.", vi:"Thành lập Ủy ban Chống Tham nhũng Quốc gia.", pa:"ਨੈਸ਼ਨਲ ਐਂਟੀ-ਕਰੱਪਸ਼ਨ ਕਮਿਸ਼ਨ ਦੀ ਸਥਾਪਨਾ।"}},
+    {date:"2022", ongoing:false, sort:"2022-10-01", type:"Family / Welfare", sent:"pos", pos:{en:"Expanded access to paid parental leave and subsidised childcare.", zhs:"扩大带薪育儿假和育儿补贴的覆盖范围。", zht:"擴大帶薪育兒假和育兒補貼的覆蓋範圍。", ar:"توسيع إجازة الأبوة المدفوعة ودعم رعاية الأطفال.", vi:"Mở rộng nghỉ phép có lương cho cha mẹ và trợ cấp giữ trẻ.", pa:"ਤਨਖਾਹ-ਸਹਿਤ ਮਾਪੇ ਛੁੱਟੀ ਅਤੇ ਸਬਸਿਡੀ ਵਾਲੇ ਚਾਈਲਡਕੇਅਰ ਦੀ ਪਹੁੰਚ ਵਧਾਈ।"}},
+    {date:"2022-09", ongoing:false, sort:"2022-09-08", type:"Climate Change", sent:"pos", pos:{en:"Legislated a 43% emissions-reduction target by 2030 and an 82% renewable-electricity goal.", zhs:"立法确定到2030年减排43%、可再生能源发电占比82%的目标。", zht:"立法確定到2030年減排43%、可再生能源發電佔比82%的目標。", ar:"تشريع هدف خفض الانبعاثات 43% بحلول 2030 وكهرباء متجددة بنسبة 82%.", vi:"Luật hóa mục tiêu giảm 43% phát thải vào năm 2030 và 82% điện tái tạo.", pa:"2030 ਤੱਕ 43% ਨਿਕਾਸੀ ਘਟਾਉਣ ਤੇ 82% ਨਵਿਆਉਣਯੋਗ ਬਿਜਲੀ ਦਾ ਟੀਚਾ ਕਾਨੂੰਨੀ।"}},
+    {date:"2017", ongoing:false, sort:"2017-12-07", type:"Marriage Equality", sent:"pos", pos:{en:"Voted to legalise same-sex marriage; had opposed holding a plebiscite.", zhs:"投票支持同性婚姻合法化；此前反对举行全民公投。", zht:"投票支持同性婚姻合法化；此前反對舉行全民公投。", ar:"صوّت لتقنين زواج المثليين؛ وكان قد عارض إجراء استفتاء شعبي.", vi:"Bỏ phiếu hợp pháp hóa hôn nhân đồng giới; trước đó phản đối tổ chức trưng cầu.", pa:"ਸਮਲਿੰਗੀ ਵਿਆਹ ਨੂੰ ਕਾਨੂੰਨੀ ਬਣਾਉਣ ਲਈ ਵੋਟ; ਪਹਿਲਾਂ ਜਨਮਤ ਦਾ ਵਿਰੋਧ ਕੀਤਾ ਸੀ।"}},
+    {date:"2012", ongoing:false, sort:"2012-09-19", type:"Marriage Equality", sent:"pos", pos:{en:"Voted in favour of the (unsuccessful) Marriage Amendment Bill 2012.", zhs:"投票支持（未获通过的）2012年婚姻修正案。", zht:"投票支持（未獲通過的）2012年婚姻修正案。", ar:"صوّت لصالح مشروع تعديل قانون الزواج 2012 (الذي لم يُقرّ).", vi:"Bỏ phiếu ủng hộ Dự luật Sửa đổi Hôn nhân 2012 (không thành công).", pa:"(ਅਸਫਲ) 2012 ਵਿਆਹ ਸੋਧ ਬਿੱਲ ਦੇ ਹੱਕ 'ਚ ਵੋਟ।"}},
+    {date:"2004", ongoing:false, sort:"2004-01-01", type:"Environment", sent:"pos", pos:{en:"As Shadow Minister for Environment, pushed climate and environmental protection up Labor's agenda.", zhs:"担任影子环境部长期间，推动气候与环境保护成为工党议程重点。", zht:"擔任影子環境部長期間，推動氣候與環境保護成為工黨議程重點。", ar:"بصفته وزير البيئة في حكومة الظل، دفع بحماية المناخ والبيئة إلى صدارة أجندة حزب العمال.", vi:"Khi làm Bộ trưởng Môi trường đối lập, đưa khí hậu và bảo vệ môi trường lên ưu tiên của Lao động.", pa:"ਸ਼ੈਡੋ ਵਾਤਾਵਰਣ ਮੰਤਰੀ ਵਜੋਂ, ਜਲਵਾਯੂ ਤੇ ਵਾਤਾਵਰਣ ਸੁਰੱਖਿਆ ਨੂੰ ਲੇਬਰ ਏਜੰਡੇ 'ਚ ਅੱਗੇ ਕੀਤਾ।"}},
+    {date:"2003-03", ongoing:false, sort:"2003-03-20", type:"Foreign Policy", sent:"pos", pos:{en:"Opposed the Iraq War, arguing it lacked a UN mandate and was an unjust invasion.", zhs:"反对伊拉克战争，认为其缺乏联合国授权、是不正义的入侵。", zht:"反對伊拉克戰爭，認為其缺乏聯合國授權、是不正義的入侵。", ar:"عارض حرب العراق، معتبراً أنها بلا تفويض أممي وغزو غير عادل.", vi:"Phản đối Chiến tranh Iraq, cho rằng thiếu sự ủy nhiệm của LHQ và là cuộc xâm lược bất công.", pa:"ਇਰਾਕ ਜੰਗ ਦਾ ਵਿਰੋਧ, ਕਿਹਾ ਕਿ ਇਸ ਕੋਲ ਯੂਐਨ ਮੰਡੇਟ ਨਹੀਂ ਸੀ ਤੇ ਇਹ ਅਨਿਆਂਪੂਰਨ ਹਮਲਾ ਸੀ।"}},
+    {date:"Ongoing", ongoing:true, sort:"1996-03-02", type:"Republic", sent:"neg", pos:{en:"A republican; supports replacing the constitutional monarchy with an Australian head of state.", zhs:"主张共和制，支持以澳大利亚国家元首取代君主立宪制。", zht:"主張共和制，支持以澳洲國家元首取代君主立憲制。", ar:"جمهوري؛ يؤيد استبدال الملكية الدستورية برئيس دولة أسترالي.", vi:"Theo chủ nghĩa cộng hòa; ủng hộ thay thế chế độ quân chủ lập hiến bằng nguyên thủ quốc gia Úc.", pa:"ਗਣਰਾਜਵਾਦੀ; ਸੰਵਿਧਾਨਕ ਰਾਜਸ਼ਾਹੀ ਦੀ ਥਾਂ ਆਸਟ੍ਰੇਲੀਆਈ ਰਾਜ-ਮੁਖੀ ਦਾ ਸਮਰਥਨ।"}}
   ]
 };
 
-const SENT_LABEL = {pos:"Positive", neg:"Negative"};
+let lang = "en";
 let current = "hanson";
 
+function applyStatic(){
+  const u = UI[lang];
+  document.documentElement.lang = (lang==="zhs"?"zh-Hans":lang==="zht"?"zh-Hant":lang);
+  document.documentElement.dir = (lang==="ar"?"rtl":"ltr");
+  document.title = u.title;
+  document.getElementById("pageTitle").textContent = u.title;
+  document.getElementById("pageSub").textContent = u.sub;
+  document.getElementById("langLabel").textContent = u.langLabel;
+  document.getElementById("filterLabel").textContent = u.filterLabel;
+  document.querySelectorAll(".tab").forEach(b=>{ b.textContent = TABS[b.dataset.tab][lang]; });
+  document.querySelectorAll(".h-date").forEach(e=>e.textContent=u.colDate);
+  document.querySelectorAll(".h-type").forEach(e=>e.textContent=u.colType);
+  document.querySelectorAll(".h-pol").forEach(e=>e.textContent=u.colPol);
+  document.querySelectorAll(".h-sent").forEach(e=>e.textContent=u.colSent);
+  document.getElementById("legend").innerHTML =
+    `<b>${u.legTitle}</b> <span class="sent pos">${u.sentPos}</span> ${u.legPos} &nbsp;·&nbsp; <span class="sent neg">${u.sentNeg}</span> ${u.legNeg} ${u.legNote}`;
+  document.getElementById("footer").textContent = u.footer;
+}
+
+function rebuildFilter(){
+  const u = UI[lang];
+  const sel = document.getElementById("typeFilter");
+  const prev = sel.value;
+  const types = [...new Set(DATA[current].map(r=>r.type))];
+  sel.innerHTML = `<option value="all">${u.allTypes}</option>`+
+    types.map(t=>`<option value="${t}">${TYPES[t][lang]}</option>`).join("");
+  if(prev && [...sel.options].some(o=>o.value===prev)) sel.value = prev;
+}
+
 function render(){
+  const u = UI[lang];
   const rows = [...DATA[current]].sort((a,b)=>b.sort.localeCompare(a.sort));
   const filter = document.getElementById("typeFilter").value;
   const tbody = document.getElementById("body-"+current);
@@ -143,25 +217,23 @@ function render(){
   rows.forEach(r=>{
     if(filter!=="all" && r.type!==filter) return;
     shown++;
+    const dateText = r.ongoing ? u.ongoing : r.date;
+    const sentText = r.sent==="pos" ? u.sentPos : u.sentNeg;
     const tr = document.createElement("tr");
-    tr.innerHTML = `<td class="date">${r.date}</td>`+
-      `<td><span class="type">${r.type}</span></td>`+
-      `<td>${r.pos}</td>`+
-      `<td><span class="sent ${r.sent}">${SENT_LABEL[r.sent]}</span></td>`;
+    tr.innerHTML = `<td class="date">${dateText}</td>`+
+      `<td><span class="type">${TYPES[r.type][lang]}</span></td>`+
+      `<td>${r.pos[lang]}</td>`+
+      `<td><span class="sent ${r.sent}">${sentText}</span></td>`;
     tbody.appendChild(tr);
   });
-  document.getElementById("count").textContent = shown+" of "+rows.length+" positions";
+  document.getElementById("count").textContent = `${shown} / ${rows.length} ${u.unit}`;
 }
 
-function rebuildFilter(){
-  const sel = document.getElementById("typeFilter");
-  const types = [...new Set(DATA[current].map(r=>r.type))].sort();
-  sel.innerHTML = '<option value="all">All types</option>'+
-    types.map(t=>`<option value="${t}">${t}</option>`).join("");
-}
-
+document.getElementById("langSel").addEventListener("change", e=>{
+  lang = e.target.value;
+  applyStatic(); rebuildFilter(); render();
+});
 document.getElementById("typeFilter").addEventListener("change", render);
-
 document.querySelectorAll(".tab").forEach(btn=>{
   btn.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
@@ -169,13 +241,11 @@ document.querySelectorAll(".tab").forEach(btn=>{
     btn.classList.add("active");
     current = btn.dataset.tab;
     document.getElementById("panel-"+current).classList.add("active");
-    rebuildFilter();
-    render();
+    rebuildFilter(); render();
   });
 });
 
-rebuildFilter();
-render();
+applyStatic(); rebuildFilter(); render();
 </script>
 </body>
 </html>
