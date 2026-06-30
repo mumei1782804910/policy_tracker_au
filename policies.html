@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Australian Politicians — Policy Tracker</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2330; --muted:#6b7686;
+    --line:#e2e7ee; --accent:#1f4e8c; --pos:#1b8a5a; --posbg:#e6f6ee;
+    --neg:#c0392b; --negbg:#fbeae8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.5}
+  header{padding:28px 20px 18px;max-width:1080px;margin:0 auto}
+  h1{margin:0 0 4px;font-size:24px}
+  .sub{color:var(--muted);font-size:14px;margin:0}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px 60px}
+  .tabs{display:flex;gap:6px;border-bottom:2px solid var(--line);margin:18px 0 0}
+  .tab{padding:11px 20px;cursor:pointer;border:none;background:none;font-size:15px;
+    font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px}
+  .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:18px 0 12px}
+  .controls label{font-size:13px;color:var(--muted);font-weight:600}
+  select{padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);
+    font-size:14px;color:var(--ink)}
+  .count{font-size:13px;color:var(--muted);margin-left:auto}
+  .panel{display:none}
+  .panel.active{display:block}
+  table{width:100%;border-collapse:collapse;background:var(--card);border-radius:12px;
+    overflow:hidden;box-shadow:0 1px 3px rgba(20,30,50,.06)}
+  thead th{background:#eef2f7;text-align:left;padding:12px 14px;font-size:12px;
+    text-transform:uppercase;letter-spacing:.4px;color:var(--muted);border-bottom:1px solid var(--line)}
+  tbody td{padding:13px 14px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:top}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#fafcff}
+  .date{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--muted);font-weight:600}
+  .type{display:inline-block;padding:3px 10px;border-radius:20px;background:#eef2f7;
+    font-size:12px;font-weight:600;color:var(--accent);white-space:nowrap}
+  .sent{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap}
+  .sent.pos{background:var(--posbg);color:var(--pos)}
+  .sent.neg{background:var(--negbg);color:var(--neg)}
+  .legend{font-size:12.5px;color:var(--muted);margin:10px 2px 0}
+  .legend b{color:var(--ink)}
+  footer{max-width:1080px;margin:0 auto;padding:0 20px 50px;font-size:12px;color:var(--muted)}
+  footer a{color:var(--accent)}
+  @media(max-width:640px){thead th:nth-child(3),tbody td:nth-child(3){display:none}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Australian Politicians — Policy Tracker</h1>
+  <p class="sub">Policy positions over each politician's career, newest first. Filter by policy type; sentiment shows whether they <b>support</b> or <b>oppose</b> the measure.</p>
+</header>
+
+<div class="wrap">
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-tab="hanson">Pauline Hanson</button>
+    <button class="tab" data-tab="albanese">Anthony Albanese</button>
+  </div>
+
+  <div class="controls">
+    <label for="typeFilter">Policy type:</label>
+    <select id="typeFilter"><option value="all">All types</option></select>
+    <span class="count" id="count"></span>
+  </div>
+
+  <!-- HANSON -->
+  <div class="panel active" id="panel-hanson">
+    <table>
+      <thead><tr><th>Date</th><th>Policy type</th><th>Position</th><th>Sentiment</th></tr></thead>
+      <tbody id="body-hanson"></tbody>
+    </table>
+  </div>
+
+  <!-- ALBANESE -->
+  <div class="panel" id="panel-albanese">
+    <table>
+      <thead><tr><th>Date</th><th>Policy type</th><th>Position</th><th>Sentiment</th></tr></thead>
+      <tbody id="body-albanese"></tbody>
+    </table>
+  </div>
+
+  <p class="legend"><b>Sentiment legend:</b> <span class="sent pos">Support</span> the politician is in favour of the measure/issue described &nbsp;·&nbsp; <span class="sent neg">Oppose</span> the politician is against it.</p>
+</div>
+
+<footer>
+  Compiled June 2026 from public reporting and reference sources including Wikipedia, The Conversation, SBS News, One Nation's website and AustralianPolitics.com. Dates are approximate where a position was held over a period. "Sentiment" reflects the politician's stance (support/oppose), not an endorsement.
+</footer>
+
+<script>
+const DATA = {
+  hanson: [
+    {date:"2026-06", sort:"2026-06-17", type:"Climate Change", pos:"Called climate change a \"hoax\" and called for a ban on wind-farm energy and a halt to renewable expansion (National Press Club address).", sent:"neg"},
+    {date:"2026", sort:"2026-05-01", type:"Immigration", pos:"Cap visas at 130,000 per year, cutting net immigration by ~570,000 to ease housing and wage pressure.", sent:"neg"},
+    {date:"2026", sort:"2026-05-02", type:"Immigration", pos:"Deport 75,000 illegal migrants and end student/skilled-visa \"loopholes\".", sent:"neg"},
+    {date:"2026", sort:"2026-05-03", type:"Immigration", pos:"Introduce an 8-year waiting period for citizenship and welfare for new arrivals.", sent:"neg"},
+    {date:"2026", sort:"2026-05-04", type:"Immigration", pos:"Withdraw Australia from the UN Refugee Convention; refuse entry from nations deemed to foster extremism.", sent:"neg"},
+    {date:"2026", sort:"2026-05-05", type:"Tax", pos:"Levy royalties on gas producers and introduce income-splitting for families to cut their tax burden.", sent:"pos"},
+    {date:"2026", sort:"2026-05-06", type:"Government Spending", pos:"Slash $90bn in spending: abolish the National Indigenous Australians Agency and TGA; cut arts, multicultural programs and foreign aid.", sent:"neg"},
+    {date:"2025", sort:"2025-09-01", type:"Gun Control", pos:"Opposed government measures to restrict high-powered firearms following the 2025 Bondi Beach shooting.", sent:"neg"},
+    {date:"2021–22", sort:"2021-09-01", type:"Health (COVID)", pos:"Opposed COVID-19 vaccine mandates; called for a Royal Commission into governments' pandemic management.", sent:"neg"},
+    {date:"2017-08", sort:"2017-08-17", type:"Islam / Civil Liberties", pos:"Wore a burqa into Senate Question Time and called for the burqa to be banned in public.", sent:"neg"},
+    {date:"Ongoing", sort:"2016-07-01", type:"Abortion", pos:"Broadly anti-abortion and self-described \"pro-life\", particularly on late-term abortion.", sent:"neg"},
+    {date:"1996-09", sort:"1996-09-10", type:"Immigration", pos:"Maiden speech: warned Australia was \"in danger of being swamped by Asians\" and urged a drastic immigration cut.", sent:"neg"},
+    {date:"1996-09", sort:"1996-09-09", type:"Indigenous Affairs", pos:"Criticised ATSIC and argued Aboriginal Australians received more benefits than non-Aboriginals.", sent:"neg"},
+    {date:"1996-09", sort:"1996-09-08", type:"Trade", pos:"Called for a return to high-tariff protectionism and criticised \"economic rationalism\".", sent:"pos"},
+    {date:"1996-09", sort:"1996-09-07", type:"Privatisation", pos:"Opposed the privatisation of Qantas and other national enterprises.", sent:"neg"}
+  ],
+  albanese: [
+    {date:"2025", sort:"2025-06-01", type:"Education", pos:"Wipe 20% of student (HECS) debt for ~3 million Australians and lift the repayment threshold to $67,000.", sent:"pos"},
+    {date:"2025", sort:"2025-05-20", type:"Health", pos:"Expand Medicare bulk-billing incentives, launch a 24-hour 1800MEDICARE telehealth line and add 50 urgent-care clinics.", sent:"pos"},
+    {date:"2025", sort:"2025-05-19", type:"Health", pos:"Cap most PBS prescriptions at $25 (down from $31.60).", sent:"pos"},
+    {date:"2025", sort:"2025-05-18", type:"Cost of Living", pos:"Provide an extra $150 in energy-bill relief to households and businesses.", sent:"pos"},
+    {date:"2025", sort:"2025-05-17", type:"Housing", pos:"Government-backed 5% deposits for first-home buyers; ~55,000 new low-income homes by 2030.", sent:"pos"},
+    {date:"2024-01", sort:"2024-01-25", type:"Tax", pos:"Restructured the Stage 3 tax cuts to give larger relief to earners under $200,000.", sent:"pos"},
+    {date:"2023-10", sort:"2023-10-14", type:"Indigenous Affairs", pos:"Championed the Indigenous Voice to Parliament constitutional referendum (defeated).", sent:"pos"},
+    {date:"2023-09", sort:"2023-09-13", type:"Housing", pos:"Passed the $10bn Housing Australia Future Fund to build 30,000 social/affordable homes.", sent:"pos"},
+    {date:"2023-08", sort:"2023-08-16", type:"Housing", pos:"Struck a National Cabinet deal to build 1.2 million homes over five years.", sent:"pos"},
+    {date:"2023-03", sort:"2023-03-13", type:"Defence", pos:"Launched the AUKUS pact to acquire $368bn of nuclear-powered submarines and defence materiel.", sent:"pos"},
+    {date:"2022", sort:"2022-12-01", type:"Industrial Relations", pos:"Overhauled industrial-relations laws and enacted the Future Made in Australia industrial policy.", sent:"pos"},
+    {date:"2022", sort:"2022-11-01", type:"Integrity", pos:"Established the National Anti-Corruption Commission.", sent:"pos"},
+    {date:"2022", sort:"2022-10-01", type:"Family / Welfare", pos:"Expanded access to paid parental leave and subsidised childcare.", sent:"pos"},
+    {date:"2022-09", sort:"2022-09-08", type:"Climate Change", pos:"Legislated a 43% emissions-reduction target by 2030 and an 82% renewable-electricity goal.", sent:"pos"},
+    {date:"2017", sort:"2017-12-07", type:"Marriage Equality", pos:"Voted to legalise same-sex marriage; had opposed holding a plebiscite.", sent:"pos"},
+    {date:"2012", sort:"2012-09-19", type:"Marriage Equality", pos:"Voted in favour of the (unsuccessful) Marriage Amendment Bill 2012.", sent:"pos"},
+    {date:"2004", sort:"2004-01-01", type:"Environment", pos:"As Shadow Minister for Environment, pushed climate and environmental protection up Labor's agenda.", sent:"pos"},
+    {date:"2003-03", sort:"2003-03-20", type:"Foreign Policy", pos:"Opposed the Iraq War, arguing it lacked a UN mandate and was an unjust invasion.", sent:"neg"},
+    {date:"Ongoing", sort:"1996-03-02", type:"Republic", pos:"A republican; supports replacing the constitutional monarchy with an Australian head of state.", sent:"pos"}
+  ]
+};
+
+const SENT_LABEL = {pos:"Support", neg:"Oppose"};
+let current = "hanson";
+
+function render(){
+  const rows = [...DATA[current]].sort((a,b)=>b.sort.localeCompare(a.sort));
+  const filter = document.getElementById("typeFilter").value;
+  const tbody = document.getElementById("body-"+current);
+  tbody.innerHTML = "";
+  let shown = 0;
+  rows.forEach(r=>{
+    if(filter!=="all" && r.type!==filter) return;
+    shown++;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td class="date">${r.date}</td>`+
+      `<td><span class="type">${r.type}</span></td>`+
+      `<td>${r.pos}</td>`+
+      `<td><span class="sent ${r.sent}">${SENT_LABEL[r.sent]}</span></td>`;
+    tbody.appendChild(tr);
+  });
+  document.getElementById("count").textContent = shown+" of "+rows.length+" positions";
+}
+
+function rebuildFilter(){
+  const sel = document.getElementById("typeFilter");
+  const types = [...new Set(DATA[current].map(r=>r.type))].sort();
+  sel.innerHTML = '<option value="all">All types</option>'+
+    types.map(t=>`<option value="${t}">${t}</option>`).join("");
+}
+
+document.getElementById("typeFilter").addEventListener("change", render);
+
+document.querySelectorAll(".tab").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+    btn.classList.add("active");
+    current = btn.dataset.tab;
+    document.getElementById("panel-"+current).classList.add("active");
+    rebuildFilter();
+    render();
+  });
+});
+
+rebuildFilter();
+render();
+</script>
+</body>
+</html>
