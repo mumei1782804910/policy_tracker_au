@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Australian Political Parties — Policy Tracker</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2330; --muted:#6b7686;
+    --line:#e2e7ee; --accent:#1f4e8c; --pos:#1b8a5a; --posbg:#e6f6ee;
+    --neg:#c0392b; --negbg:#fbeae8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.5}
+  header{padding:28px 20px 18px;max-width:1080px;margin:0 auto}
+  h1{margin:0 0 4px;font-size:24px}
+  .sub{color:var(--muted);font-size:14px;margin:0}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px 60px}
+  .tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:2px solid var(--line);margin:18px 0 0}
+  .tab{padding:11px 18px;cursor:pointer;border:none;background:none;font-size:15px;
+    font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px}
+  .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:18px 0 12px}
+  .controls label{font-size:13px;color:var(--muted);font-weight:600}
+  select{padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);
+    font-size:14px;color:var(--ink)}
+  .count{font-size:13px;color:var(--muted);margin-left:auto}
+  .panel{display:none}
+  .panel.active{display:block}
+  table{width:100%;border-collapse:collapse;background:var(--card);border-radius:12px;
+    overflow:hidden;box-shadow:0 1px 3px rgba(20,30,50,.06)}
+  thead th{background:#eef2f7;text-align:left;padding:12px 14px;font-size:12px;
+    text-transform:uppercase;letter-spacing:.4px;color:var(--muted);border-bottom:1px solid var(--line)}
+  tbody td{padding:13px 14px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:top}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#fafcff}
+  .date{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--muted);font-weight:600}
+  .type{display:inline-block;padding:3px 10px;border-radius:20px;background:#eef2f7;
+    font-size:12px;font-weight:600;color:var(--accent);white-space:nowrap}
+  .sent{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap}
+  .sent.pos{background:var(--posbg);color:var(--pos)}
+  .sent.neg{background:var(--negbg);color:var(--neg)}
+  .legend{font-size:12.5px;color:var(--muted);margin:10px 2px 0}
+  .legend b{color:var(--ink)}
+  footer{max-width:1080px;margin:0 auto;padding:0 20px 50px;font-size:12px;color:var(--muted)}
+  @media(max-width:640px){thead th:nth-child(3),tbody td:nth-child(3){display:none}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Australian Political Parties — Policy Tracker</h1>
+  <p class="sub">Policies proposed or supported by each party, newest first. Filter by policy type; sentiment shows how the <b>public</b> broadly received the policy.</p>
+</header>
+
+<div class="wrap">
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-tab="labor">Labor</button>
+    <button class="tab" data-tab="liberal">Liberal</button>
+    <button class="tab" data-tab="greens">Greens</button>
+    <button class="tab" data-tab="onenation">One Nation</button>
+  </div>
+
+  <div class="controls">
+    <label for="typeFilter">Policy type:</label>
+    <select id="typeFilter"><option value="all">All types</option></select>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div class="panel active" id="panel-labor">
+    <table><thead><tr><th>Date</th><th>Policy type</th><th>Policy</th><th>Public sentiment</th></tr></thead><tbody id="body-labor"></tbody></table>
+  </div>
+  <div class="panel" id="panel-liberal">
+    <table><thead><tr><th>Date</th><th>Policy type</th><th>Policy</th><th>Public sentiment</th></tr></thead><tbody id="body-liberal"></tbody></table>
+  </div>
+  <div class="panel" id="panel-greens">
+    <table><thead><tr><th>Date</th><th>Policy type</th><th>Policy</th><th>Public sentiment</th></tr></thead><tbody id="body-greens"></tbody></table>
+  </div>
+  <div class="panel" id="panel-onenation">
+    <table><thead><tr><th>Date</th><th>Policy type</th><th>Policy</th><th>Public sentiment</th></tr></thead><tbody id="body-onenation"></tbody></table>
+  </div>
+
+  <p class="legend"><b>Public sentiment legend:</b> <span class="sent pos">Positive</span> the policy was broadly popular / well received &nbsp;·&nbsp; <span class="sent neg">Negative</span> the policy was broadly unpopular / poorly received. Reception is a general assessment from polling and reporting and varies across the population.</p>
+</div>
+
+<footer>
+  Compiled June 2026 from public reporting and reference sources including Wikipedia, Britannica, The Conversation, SBS News, AustralianPolitics.com and the parties' own websites. Dates are approximate and "sentiment" reflects broad public reception (from polling and reporting), not an endorsement.
+</footer>
+
+<script>
+const DATA = {
+  labor: [
+    {date:"2025", sort:"2025-06-01", type:"Education", pos:"Cut 20% of student (HECS) debt for ~3 million Australians and lift the repayment threshold.", sent:"pos"},
+    {date:"2025", sort:"2025-05-20", type:"Health", pos:"Expand Medicare bulk-billing, cap PBS scripts at $25 and roll out more urgent-care clinics.", sent:"pos"},
+    {date:"2022–25", sort:"2024-05-01", type:"Cost of Living", pos:"$20bn+ in energy-bill rebates and fee-free TAFE places to ease cost-of-living pressure.", sent:"pos"},
+    {date:"2022", sort:"2022-09-08", type:"Climate Change", pos:"Powering Australia plan: legislated 43% emissions cut by 2030 and 82% renewables.", sent:"pos"},
+    {date:"2022", sort:"2022-11-01", type:"Integrity", pos:"Established the National Anti-Corruption Commission.", sent:"pos"},
+    {date:"2013", sort:"2013-07-01", type:"Disability", pos:"Created the National Disability Insurance Scheme (NDIS).", sent:"pos"},
+    {date:"2012", sort:"2012-07-01", type:"Climate Change", pos:"Clean Energy Act introduced a fixed carbon price (the \"carbon tax\") on major emitters.", sent:"neg"},
+    {date:"2009", sort:"2009-02-01", type:"Economy", pos:"GFC stimulus and Building Education Revolution, credited with avoiding recession.", sent:"pos"},
+    {date:"2008", sort:"2008-02-13", type:"Indigenous Affairs", pos:"National Apology to the Stolen Generations.", sent:"pos"},
+    {date:"2007", sort:"2007-12-01", type:"Industrial Relations", pos:"Pledged to abolish WorkChoices; later delivered the Fair Work Act.", sent:"pos"},
+    {date:"1984", sort:"1984-02-01", type:"Health", pos:"Introduced Medicare, Australia's universal public health insurance scheme.", sent:"pos"},
+    {date:"1972", sort:"1972-12-01", type:"Education", pos:"Whitlam reforms: abolished university fees and ended conscription.", sent:"pos"}
+  ],
+  liberal: [
+    {date:"2025", sort:"2025-04-01", type:"Immigration", pos:"Election platform to cut permanent migration and reduce the refugee intake (Dutton).", sent:"neg"},
+    {date:"2024–25", sort:"2024-06-19", type:"Energy", pos:"Proposed building seven government-owned nuclear power plants in place of a renewables-led grid.", sent:"neg"},
+    {date:"2021", sort:"2021-09-15", type:"Defence", pos:"Signed the AUKUS security pact for nuclear-powered submarines (Morrison).", sent:"pos"},
+    {date:"2020", sort:"2020-03-30", type:"Economy", pos:"JobKeeper wage subsidy and pandemic support during COVID-19.", sent:"pos"},
+    {date:"2014", sort:"2014-05-13", type:"Welfare", pos:"2014 austerity budget with proposed welfare, health and university cuts (Abbott/Hockey).", sent:"neg"},
+    {date:"2013", sort:"2013-09-18", type:"Immigration", pos:"Operation Sovereign Borders \"stop the boats\" maritime turn-back policy.", sent:"pos"},
+    {date:"2013", sort:"2013-07-17", type:"Climate Change", pos:"Repealed the carbon price (\"axe the tax\") (Abbott).", sent:"pos"},
+    {date:"2005", sort:"2005-05-26", type:"Industrial Relations", pos:"WorkChoices laws cutting unfair-dismissal protections and award conditions (Howard).", sent:"neg"},
+    {date:"2000", sort:"2000-07-01", type:"Tax", pos:"Introduced the Goods and Services Tax (GST) (Howard).", sent:"neg"},
+    {date:"1996", sort:"1996-05-10", type:"Gun Control", pos:"National Firearms Agreement and gun buyback after the Port Arthur massacre (Howard).", sent:"pos"}
+  ],
+  greens: [
+    {date:"2025", sort:"2025-04-01", type:"Housing", pos:"Wind back negative gearing and the CGT discount on second and subsequent properties.", sent:"pos"},
+    {date:"2025", sort:"2025-03-15", type:"Health", pos:"Extend Medicare to cover dental and mental-health care.", sent:"pos"},
+    {date:"2022", sort:"2022-07-01", type:"Climate Change", pos:"Used Senate balance of power to push for stronger climate targets and end new coal/gas.", sent:"pos"},
+    {date:"2012", sort:"2012-07-01", type:"Health", pos:"Secured dental care into Medicare for children in the minority-government deal.", sent:"pos"},
+    {date:"2011–12", sort:"2011-11-08", type:"Climate Change", pos:"Negotiated the carbon-pricing scheme and Clean Energy Finance Corporation with Labor.", sent:"neg"},
+    {date:"2009", sort:"2009-12-01", type:"Climate Change", pos:"Voted down Labor's CPRS emissions scheme, demanding stronger action.", sent:"neg"},
+    {date:"2003", sort:"2003-03-20", type:"Foreign Policy", pos:"Opposed the Iraq War.", sent:"pos"},
+    {date:"1992", sort:"1992-08-30", type:"Environment", pos:"Founded federally on environmental protection, anti-nuclear and social-justice principles.", sent:"pos"}
+  ],
+  onenation: [
+    {date:"2026", sort:"2026-06-17", type:"Climate Change", pos:"Abolish net-zero targets, expand coal and gas, and ban new wind farms.", sent:"neg"},
+    {date:"2026", sort:"2026-05-01", type:"Immigration", pos:"Cap visas at 130,000/yr, deport illegal migrants and end visa \"loopholes\".", sent:"pos"},
+    {date:"2026", sort:"2026-05-02", type:"Tax", pos:"Income-splitting for families with a dependent child to cut their tax.", sent:"pos"},
+    {date:"2026", sort:"2026-05-03", type:"Water", pos:"Build new dams and ban the sale of water rights to foreign investors.", sent:"pos"},
+    {date:"2026", sort:"2026-05-04", type:"Government Spending", pos:"$90bn savings plan: reform the NDIS, abolish agencies and exit costly treaties.", sent:"neg"},
+    {date:"2021–22", sort:"2021-09-01", type:"Health (COVID)", pos:"Opposed vaccine mandates and called for a Royal Commission into the COVID response.", sent:"neg"},
+    {date:"2017", sort:"2017-08-17", type:"Islam / Civil Liberties", pos:"Called for a ban on the burqa in public spaces.", sent:"neg"},
+    {date:"1998", sort:"1998-10-03", type:"Trade", pos:"Protectionism and opposition to globalisation and free-trade agreements.", sent:"neg"},
+    {date:"1997", sort:"1997-04-11", type:"Immigration", pos:"Founded on opposition to immigration and multiculturalism.", sent:"neg"}
+  ]
+};
+
+const SENT_LABEL = {pos:"Positive", neg:"Negative"};
+let current = "labor";
+
+function render(){
+  const rows = [...DATA[current]].sort((a,b)=>b.sort.localeCompare(a.sort));
+  const filter = document.getElementById("typeFilter").value;
+  const tbody = document.getElementById("body-"+current);
+  tbody.innerHTML = "";
+  let shown = 0;
+  rows.forEach(r=>{
+    if(filter!=="all" && r.type!==filter) return;
+    shown++;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td class="date">${r.date}</td>`+
+      `<td><span class="type">${r.type}</span></td>`+
+      `<td>${r.pos}</td>`+
+      `<td><span class="sent ${r.sent}">${SENT_LABEL[r.sent]}</span></td>`;
+    tbody.appendChild(tr);
+  });
+  document.getElementById("count").textContent = shown+" of "+rows.length+" policies";
+}
+
+function rebuildFilter(){
+  const sel = document.getElementById("typeFilter");
+  const types = [...new Set(DATA[current].map(r=>r.type))].sort();
+  sel.innerHTML = '<option value="all">All types</option>'+
+    types.map(t=>`<option value="${t}">${t}</option>`).join("");
+}
+
+document.getElementById("typeFilter").addEventListener("change", render);
+
+document.querySelectorAll(".tab").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+    btn.classList.add("active");
+    current = btn.dataset.tab;
+    document.getElementById("panel-"+current).classList.add("active");
+    rebuildFilter();
+    render();
+  });
+});
+
+rebuildFilter();
+render();
+</script>
+</body>
+</html>
