@@ -25,7 +25,11 @@
   h1{margin:0 0 4px;font-size:24px}
   .sub{color:var(--muted);font-size:14px;margin:0;max-width:760px}
   .wrap{max-width:1080px;margin:0 auto;padding:0 20px 60px}
-  .topbar{display:flex;justify-content:flex-end;max-width:1080px;margin:0 auto;padding:8px 20px 0}
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;max-width:1080px;margin:0 auto;padding:12px 20px 0}
+  .nav{display:flex;gap:4px;flex-wrap:wrap}
+  .nav a{font-size:13.5px;font-weight:600;color:var(--muted);text-decoration:none;padding:6px 12px;border-radius:8px}
+  .nav a:hover{background:#eef2f7;color:var(--accent)}
+  .nav a.active{color:var(--accent);background:#eef2f7}
   .langbox{display:flex;align-items:center;gap:8px}
   .langbox label{font-size:13px;color:var(--muted);font-weight:600}
   .tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:2px solid var(--line);margin:18px 0 0}
@@ -60,6 +64,11 @@
 </head>
 <body>
 <div class="topbar">
+  <nav class="nav">
+    <a data-page="home" data-file="index.html"></a>
+    <a data-page="politicians" data-file="politicians.html" class="active"></a>
+    <a data-page="parties" data-file="parties.html"></a>
+  </nav>
   <div class="langbox">
     <label id="langLabel" for="langSel">Language</label>
     <select id="langSel">
@@ -183,13 +192,28 @@ const DATA = {
   ]
 };
 
+const NAV = {
+  en:{home:"Home", politicians:"Politicians", parties:"Parties"},
+  zhs:{home:"首页", politicians:"政治人物", parties:"政党"},
+  zht:{home:"首頁", politicians:"政治人物", parties:"政黨"},
+  ar:{home:"الرئيسية", politicians:"السياسيون", parties:"الأحزاب"},
+  vi:{home:"Trang chủ", politicians:"Chính trị gia", parties:"Đảng phái"},
+  pa:{home:"ਹੋਮ", politicians:"ਸਿਆਸਤਦਾਨ", parties:"ਪਾਰਟੀਆਂ"}
+};
+
 let lang = "en";
 let current = "hanson";
+(function(){ const p = new URLSearchParams(location.search).get("lang"); if(p && UI[p]) lang = p; })();
 
 function applyStatic(){
   const u = UI[lang];
   document.documentElement.lang = (lang==="zhs"?"zh-Hans":lang==="zht"?"zh-Hant":lang);
   document.documentElement.dir = (lang==="ar"?"rtl":"ltr");
+  document.getElementById("langSel").value = lang;
+  document.querySelectorAll(".nav a").forEach(a=>{
+    a.textContent = NAV[lang][a.dataset.page];
+    a.href = a.dataset.file + "?lang=" + lang;
+  });
   document.title = u.title;
   document.getElementById("pageTitle").textContent = u.title;
   document.getElementById("pageSub").textContent = u.sub;
@@ -239,6 +263,9 @@ function render(){
 
 document.getElementById("langSel").addEventListener("change", e=>{
   lang = e.target.value;
+  const params = new URLSearchParams(location.search);
+  params.set("lang", lang);
+  history.replaceState(null, "", "?" + params.toString());
   applyStatic(); rebuildFilter(); render();
 });
 document.getElementById("typeFilter").addEventListener("change", render);
