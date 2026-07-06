@@ -11,7 +11,18 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Australian Policy Tracker</title>
+<title>Australian Policy Tracker — Australian Politics &amp; Political Policies</title>
+<meta name="description" content="Track Australian politics and political policies in one place. Compare the policies of Australian politicians and parties — Labor (Labour), Liberal, Greens and One Nation — by date, topic and public sentiment.">
+<meta name="keywords" content="Australian politics, Australia political policies, One Nation policies, Labor policies, Labour policies, Liberal party policies, Greens policies, Pauline Hanson, Anthony Albanese">
+<link rel="canonical" href="https://mumei1782804910.github.io/policy_tracker_au/index.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Australian Policy Tracker — Australian Politics &amp; Political Policies">
+<meta property="og:description" content="Compare the policies of Australian politicians and parties — Labor, Liberal, Greens and One Nation — by date, topic and public sentiment.">
+<meta property="og:url" content="https://mumei1782804910.github.io/policy_tracker_au/index.html">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"Australian Policy Tracker","url":"https://mumei1782804910.github.io/policy_tracker_au/","description":"A non-partisan reference tracking Australian politics and political policies — the policy positions of Australian politicians and parties including Labor, Liberal, Greens and One Nation.","keywords":"Australian politics, Australia political policies, One Nation policies, Labor policies, Labour policies, Liberal party policies, Greens policies","inLanguage":["en","zh-Hans","zh-Hant","ar","vi","pa"]}
+</script>
 <style>
   :root{
     --bg:#f6f8fa; --card:#ffffff; --ink:#1b2431; --muted:#67717f;
@@ -76,21 +87,21 @@
 </div>
 
 <section class="hero">
-  <span class="brand"><span class="dot"></span><span id="brand"></span></span>
-  <h1 id="heroH"></h1>
-  <p class="lead" id="heroP"></p>
+  <span class="brand"><span class="dot"></span><span id="brand">Australian Policy Tracker</span></span>
+  <h1 id="heroH">Australian politics and political policies, tracked plainly.</h1>
+  <p class="lead" id="heroP">A simple, non-partisan reference for the policy positions of Australia's politicians and parties — Labor, Liberal, Greens and One Nation — organised by date, type, and how the public received them.</p>
 </section>
 
 <section class="cards">
   <a class="card" data-file="politicians.html" id="cardPol">
-    <h2 id="polTitle"></h2>
-    <p id="polDesc"></p>
-    <span class="cta"><span id="polCta"></span><span class="arw">→</span></span>
+    <h2 id="polTitle">Politicians' policies</h2>
+    <p id="polDesc">Policy positions of Pauline Hanson and Anthony Albanese across their careers.</p>
+    <span class="cta"><span id="polCta">Explore</span><span class="arw">→</span></span>
   </a>
   <a class="card" data-file="parties.html" id="cardPar">
-    <h2 id="parTitle"></h2>
-    <p id="parDesc"></p>
-    <span class="cta"><span id="parCta"></span><span class="arw">→</span></span>
+    <h2 id="parTitle">Party policies</h2>
+    <p id="parDesc">Policies of Labor, Liberal, the Greens and One Nation, going back decades.</p>
+    <span class="cta"><span id="parCta">Explore</span><span class="arw">→</span></span>
   </a>
 </section>
 
@@ -101,7 +112,7 @@
 
 <script>
 const UI = {
-  en:{title:"Australian Policy Tracker", brand:"Australian Policy Tracker", langLabel:"Language", heroH:"Tracking Australian policy, plainly.", heroP:"A simple, non-partisan reference for the policy positions of Australia's politicians and parties — organised by date, type, and how the public received them. We try to present the record fairly and let you draw your own conclusions.", polTitle:"Politicians", polDesc:"Policy positions of Pauline Hanson and Anthony Albanese across their careers.", parTitle:"Parties", parDesc:"Policies of Labor, Liberal, the Greens and One Nation, going back decades.", cta:"Explore", footer:"Compiled June 2026 from public reporting and reference sources. This site is independent and not affiliated with any politician or party. Sentiment reflects broad public reception, not endorsement.", nav:{home:"Home", politicians:"Politicians", parties:"Parties"}},
+  en:{title:"Australian Policy Tracker", docTitle:"Australian Policy Tracker — Australian Politics & Political Policies", brand:"Australian Policy Tracker", langLabel:"Language", heroH:"Tracking Australian policy, plainly.", heroP:"A simple, non-partisan reference for the policy positions of Australia's politicians and parties — organised by date, type, and how the public received them. We try to present the record fairly and let you draw your own conclusions.", polTitle:"Politicians", polDesc:"Policy positions of Pauline Hanson and Anthony Albanese across their careers.", parTitle:"Parties", parDesc:"Policies of Labor, Liberal, the Greens and One Nation, going back decades.", cta:"Explore", footer:"Compiled June 2026 from public reporting and reference sources. This site is independent and not affiliated with any politician or party. Sentiment reflects broad public reception, not endorsement.", nav:{home:"Home", politicians:"Politicians", parties:"Parties"}},
   zhs:{title:"澳大利亚政策追踪", brand:"澳大利亚政策追踪", langLabel:"语言", heroH:"清晰地追踪澳大利亚政策。", heroP:"一个简明、无党派立场的参考，汇集澳大利亚政治人物与政党的政策立场——按日期、类型及公众反响整理。我们力求客观呈现记录，由您自行判断。", polTitle:"政治人物", polDesc:"宝琳·汉森与安东尼·阿尔巴尼斯在其政治生涯中的政策立场。", parTitle:"政党", parDesc:"工党、自由党、绿党和一国党数十年来的政策。", cta:"查看", footer:"于2026年6月根据公开报道及参考资料整理。本网站独立运营，不隶属于任何政治人物或政党。反响反映公众的总体反应，并非认可。", nav:{home:"首页", politicians:"政治人物", parties:"政党"}},
   zht:{title:"澳洲政策追蹤", brand:"澳洲政策追蹤", langLabel:"語言", heroH:"清晰地追蹤澳洲政策。", heroP:"一個簡明、無黨派立場的參考，匯集澳洲政治人物與政黨的政策立場——按日期、類型及公眾反響整理。我們力求客觀呈現記錄，由您自行判斷。", polTitle:"政治人物", polDesc:"寶琳·漢森與安東尼·阿爾巴尼斯在其政治生涯中的政策立場。", parTitle:"政黨", parDesc:"工黨、自由黨、綠黨和一國黨數十年來的政策。", cta:"查看", footer:"於2026年6月根據公開報導及參考資料整理。本網站獨立運營，不隸屬於任何政治人物或政黨。反響反映公眾的整體反應，並非認可。", nav:{home:"首頁", politicians:"政治人物", parties:"政黨"}},
   ar:{title:"متتبّع السياسات الأسترالية", brand:"متتبّع السياسات الأسترالية", langLabel:"اللغة", heroH:"تتبّع السياسات الأسترالية بوضوح.", heroP:"مرجع بسيط وغير حزبي لمواقف سياسات سياسيي أستراليا وأحزابها — مرتّبة حسب التاريخ والنوع وكيفية تلقّي الجمهور لها. نسعى إلى عرض السجل بإنصاف ونترك لك استخلاص النتائج.", polTitle:"السياسيون", polDesc:"مواقف سياسات بولين هانسون وأنتوني ألبانيزي عبر مسيرتهما.", parTitle:"الأحزاب", parDesc:"سياسات حزب العمال والليبرالي والخضر وحزب الأمة الواحدة على مدى عقود.", cta:"استكشف", footer:"جُمعت في يونيو 2026 من تقارير عامة ومصادر مرجعية. هذا الموقع مستقل وغير تابع لأي سياسي أو حزب. تعكس المشاعر الاستقبال العام للجمهور وليست تأييداً.", nav:{home:"الرئيسية", politicians:"السياسيون", parties:"الأحزاب"}},
@@ -118,7 +129,7 @@ function apply(){
   const u = UI[lang];
   document.documentElement.lang = (lang==="zhs"?"zh-Hans":lang==="zht"?"zh-Hant":lang);
   document.documentElement.dir = (lang==="ar"?"rtl":"ltr");
-  document.title = u.title;
+  document.title = u.docTitle || u.title;
   document.getElementById("langSel").value = lang;
   document.getElementById("langLabel").textContent = u.langLabel;
   document.getElementById("brand").textContent = u.brand;
