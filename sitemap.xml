@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <url>
+    <loc>https://mumei1782804910.github.io/policy_tracker_au/index.html</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mumei1782804910.github.io/policy_tracker_au/index.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mumei1782804910.github.io/policy_tracker_au/index.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://mumei1782804910.github.io/policy_tracker_au/index.html?lang=zhs"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://mumei1782804910.github.io/policy_tracker_au/index.html?lang=zht"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://mumei1782804910.github.io/policy_tracker_au/index.html?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://mumei1782804910.github.io/policy_tracker_au/index.html?lang=vi"/>
+    <xhtml:link rel="alternate" hreflang="pa" href="https://mumei1782804910.github.io/policy_tracker_au/index.html?lang=pa"/>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://mumei1782804910.github.io/policy_tracker_au/politicians.html</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mumei1782804910.github.io/policy_tracker_au/politicians.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mumei1782804910.github.io/policy_tracker_au/politicians.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://mumei1782804910.github.io/policy_tracker_au/politicians.html?lang=zhs"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://mumei1782804910.github.io/policy_tracker_au/politicians.html?lang=zht"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://mumei1782804910.github.io/policy_tracker_au/politicians.html?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://mumei1782804910.github.io/policy_tracker_au/politicians.html?lang=vi"/>
+    <xhtml:link rel="alternate" hreflang="pa" href="https://mumei1782804910.github.io/policy_tracker_au/politicians.html?lang=pa"/>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://mumei1782804910.github.io/policy_tracker_au/parties.html</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mumei1782804910.github.io/policy_tracker_au/parties.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mumei1782804910.github.io/policy_tracker_au/parties.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://mumei1782804910.github.io/policy_tracker_au/parties.html?lang=zhs"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://mumei1782804910.github.io/policy_tracker_au/parties.html?lang=zht"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://mumei1782804910.github.io/policy_tracker_au/parties.html?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://mumei1782804910.github.io/policy_tracker_au/parties.html?lang=vi"/>
+    <xhtml:link rel="alternate" hreflang="pa" href="https://mumei1782804910.github.io/policy_tracker_au/parties.html?lang=pa"/>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>
