@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mumei1782804910.github.io/policy_tracker_au/sitemap.xml
